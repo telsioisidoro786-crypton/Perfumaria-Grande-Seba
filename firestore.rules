@@ -1,0 +1,16 @@
+// ═══════════════════════════════════════════════════════
+// FIRESTORE RULES — Perfumaria Grande Seba
+// Firebase Console → Firestore Database → Regras
+// ═══════════════════════════════════════════════════════
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // PRODUTOS — leitura pública, escrita bloqueada (feita pelo admin.html via SDK)
+    match /produtos/{produtoId} {
+      allow read: if true;
+      allow write: if false; // O admin.html escreve com a chave da app (não precisa de auth por agora)
+    }
+  }
+}

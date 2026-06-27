@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Grande Seba Lda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #0A0A0A; --coal: #2C2C2C; --white: #FFFFFF;
+      --offwhite: #F5F5F5; --gray: #9A9A9A; --border: #E0E0E0;
+      --fem: #C87FA0; --masc: #5A8FB8; --green: #22c55e; --red: #ef4444;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: var(--black); }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--black);
+    }
+    .login-box {
+      background: var(--coal); border-radius: 12px; padding: 2.5rem;
+      width: 340px; text-align: center;
+    }
+    .login-box h1 {
+      font-family: 'Playfair Display', serif; color: var(--white);
+      font-size: 1.4rem; margin-bottom: 0.3rem;
+    }
+    .login-box p { color: var(--gray); font-size: 0.82rem; margin-bottom: 2rem; }
+    .login-box input {
+      width: 100%; padding: 0.7rem 1rem; border-radius: 6px;
+      border: 1px solid #444; background: #1a1a1a; color: var(--white);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      margin-bottom: 0.75rem; outline: none;
+    }
+    .login-box input:focus { border-color: var(--white); }
+    .btn-login {
+      width: 100%; padding: 0.75rem; background: var(--white); color: var(--black);
+      border: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s;
+    }
+    .btn-login:hover { opacity: 0.85; }
+    .login-err { color: #ef4444; font-size: 0.8rem; margin-top: 0.5rem; }
+
+    /* ── LAYOUT ── */
+    #adminApp { display: none; min-height: 100vh; }
+    .admin-header {
+      background: var(--black); color: var(--white);
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .admin-header .brand {
+      font-family: 'Playfair Display', serif; font-size: 1rem;
+    }
+    .admin-header .brand span { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--gray); margin-left: 0.5rem; font-weight: 300; }
+    .btn-logout {
+      background: none; border: 1px solid #444; color: var(--gray);
+      padding: 0.3rem 0.8rem; border-radius: 4px; cursor: pointer;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--white); color: var(--white); }
+
+    .admin-body { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--white); border-radius: 8px; padding: 1.1rem 1.25rem;
+      border: 1px solid var(--border);
+    }
+    .stat-label { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .stat-val { font-size: 1.6rem; font-weight: 600; }
+    .stat-val.fem { color: var(--fem); }
+    .stat-val.masc { color: var(--masc); }
+    .stat-val.green { color: var(--green); }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
+    }
+    .btn-primary {
+      background: var(--black); color: var(--white); border: none;
+      padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+      display: flex; align-items: center; gap: 0.4rem; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--coal); }
+    .toolbar-search {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.55rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      background: var(--white); outline: none; width: 200px;
+    }
+    .toolbar-select {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.55rem 0.7rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      background: var(--white); outline: none; cursor: pointer;
+    }
+
+    /* ── TABELA ── */
+    .table-wrap { background: var(--white); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--offwhite); }
+    th {
+      padding: 0.8rem 1rem; text-align: left; font-size: 0.72rem;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--gray); border-bottom: 1px solid var(--border);
+    }
+    td { padding: 0.85rem 1rem; font-size: 0.85rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .badge {
+      display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px;
+      font-size: 0.7rem; font-weight: 600;
+    }
+    .badge-fem  { background: #FDF0F5; color: var(--fem); }
+    .badge-masc { background: #EEF4FA; color: var(--masc); }
+    .badge-uni  { background: var(--offwhite); color: var(--gray); }
+    .badge-on   { background: #dcfce7; color: #166534; }
+    .badge-off  { background: #fee2e2; color: #991b1b; }
+
+    .actions { display: flex; gap: 0.4rem; }
+    .btn-icon {
+      padding: 0.35rem 0.65rem; border-radius: 5px; border: 1px solid var(--border);
+      cursor: pointer; background: none; font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+    }
+    .btn-icon.edit:hover { background: #eff6ff; border-color: var(--masc); color: var(--masc); }
+    .btn-icon.del:hover  { background: #fef2f2; border-color: var(--red); color: var(--red); }
+    .btn-icon.toggle:hover { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+
+    .img-thumb {
+      width: 40px; height: 40px; border-radius: 6px;
+      object-fit: cover; background: var(--offwhite);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; border: 1px solid var(--border); overflow: hidden;
+    }
+    .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── MODAL FORM ── */
+    .form-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .form-overlay.open { opacity: 1; pointer-events: all; }
+    .form-box {
+      background: var(--white); border-radius: 12px; width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      transform: scale(0.96); transition: transform 0.25s;
+    }
+    .form-overlay.open .form-box { transform: scale(1); }
+    .form-header {
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .form-header h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+    .form-body { padding: 1.5rem; display: grid; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .field label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--coal); }
+    .field input, .field select, .field textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; color: var(--black); outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--coal); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field .hint { font-size: 0.72rem; color: var(--gray); margin-top: 0.3rem; }
+    .check-row { display: flex; gap: 1.5rem; }
+    .check-label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer; }
+    .form-footer {
+      padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+      display: flex; gap: 0.75rem; justify-content: flex-end;
+    }
+    .btn-cancel {
+      padding: 0.6rem 1.1rem; border: 1px solid var(--border); border-radius: 6px;
+      background: none; cursor: pointer; font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-save {
+      padding: 0.6rem 1.4rem; background: var(--black); color: var(--white);
+      border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+      font-weight: 600; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    }
+    .btn-save:hover { background: var(--coal); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      background: var(--black); color: var(--white);
+      padding: 0.7rem 1.2rem; border-radius: 8px; font-size: 0.82rem;
+      z-index: 500; opacity: 0; transform: translateY(10px);
+      transition: all 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .empty-row td { text-align: center; padding: 3rem; color: var(--gray); }
+
+    .upload-area {
+      border: 2px dashed var(--border); border-radius: 8px;
+      padding: 1.25rem; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--offwhite);
+    }
+    .upload-area:hover { border-color: var(--coal); background: #f0f0f0; }
+    .upload-preview-empty span { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+    .upload-preview-empty p { font-size: 0.82rem; color: var(--coal); margin-bottom: 0.2rem; }
+    .upload-preview-empty small { font-size: 0.72rem; color: var(--gray); }
+    .upload-preview-img { width: 100%; max-height: 140px; object-fit: contain; border-radius: 6px; }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--green); width: 0%; transition: width 0.2s; border-radius: 2px; }
+
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      table thead { display: none; }
+      table td { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>Grande Seba</h1>
+    <p>Painel de administração</p>
+    <input type="password" id="loginPass" placeholder="Palavra-passe" onkeydown="if(event.key==='Enter')entrar()" autocomplete="current-password"/>
+    <button class="btn-login" onclick="entrar()">Entrar</button>
+    <p class="login-err" id="loginErr"></p>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <header class="admin-header">
+    <div class="brand">Grande Seba <span>Painel Admin</span></div>
+    <button class="btn-logout" onclick="sair()">Sair</button>
+  </header>
+
+  <div class="admin-body">
+    <!-- STATS -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="stat-label">Total Produtos</div><div class="stat-val" id="statTotal">—</div></div>
+      <div class="stat-card"><div class="stat-label">Feminino</div><div class="stat-val fem" id="statFem">—</div></div>
+      <div class="stat-card"><div class="stat-label">Masculino</div><div class="stat-val masc" id="statMasc">—</div></div>
+      <div class="stat-card"><div class="stat-label">Activos</div><div class="stat-val green" id="statActivos">—</div></div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <button class="btn-primary" onclick="abrirForm()">+ Novo Produto</button>
+      <input class="toolbar-search" type="text" placeholder="Pesquisar produto..." oninput="filtrarTabela(this.value)"/>
+      <select class="toolbar-select" onchange="filtrarTabela(document.querySelector('.toolbar-search').value, this.value)">
+        <option value="">Todas as categorias</option>
+        <option value="feminino">Feminino</option>
+        <option value="masculino">Masculino</option>
+        <option value="unissexo">Unissexo</option>
+      </select>
+      <a href="index.html" target="_blank" style="margin-left:auto; font-size:0.8rem; color:var(--gray); text-decoration:none;">↗ Ver loja</a>
+    </div>
+
+    <!-- TABELA -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50px">Img</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th>Preço (Kz)</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Destaque</th>
+            <th style="width:140px">Acções</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr class="empty-row"><td colspan="9">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FORM -->
+<div class="form-overlay" id="formOverlay">
+  <div class="form-box">
+    <div class="form-header">
+      <h2 id="formTitle">Novo Produto</h2>
+      <button class="btn-cancel" onclick="fecharForm()">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="field">
+        <label>Nome do produto *</label>
+        <input type="text" id="fNome" placeholder="Ex: Chanel N°5 EDP"/>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Categoria *</label>
+          <select id="fCategoria">
+            <option value="feminino">Feminino</option>
+            <option value="masculino">Masculino</option>
+            <option value="unissexo">Unissexo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tipo *</label>
+          <select id="fTipo">
+            <option value="perfume">Perfume</option>
+            <option value="cosmetico">Cosmético</option>
+            <option value="cuidado">Cuidado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Preço (Kz) *</label>
+          <input type="number" id="fPreco" placeholder="Ex: 15000" min="0"/>
+        </div>
+        <div class="field">
+          <label>Quantidade em stock *</label>
+          <input type="number" id="fQuantidade" placeholder="Ex: 10" min="0"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <textarea id="fDescricao" placeholder="Descreve o produto: notas olfativas, ingredientes, benefícios..."></textarea>
+      </div>
+      <div class="field">
+        <label>Imagem do produto</label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fImagemFile').click()">
+          <div id="uploadPreview" class="upload-preview-empty">
+            <span>📷</span>
+            <p>Clica para escolher uma foto</p>
+            <small>JPG, PNG ou WEBP · máx. 5MB</small>
+          </div>
+        </div>
+        <input type="file" id="fImagemFile" accept="image/*" style="display:none" onchange="previewImagem(this)"/>
+        <div id="uploadProgress" style="display:none; margin-top:0.5rem;">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <small id="progressLabel" style="color:var(--gray);font-size:0.72rem;">A fazer upload...</small>
+        </div>
+        <p class="hint" style="margin-top:0.4rem">— ou cola um link directo —</p>
+        <input type="url" id="fImagem" placeholder="https://..." style="margin-top:0.35rem"/>
+        <p class="hint">Se fizeres upload acima, o link é preenchido automaticamente.</p>
+      </div>
+      <div class="check-row">
+        <label class="check-label">
+          <input type="checkbox" id="fDisponivel" checked/> Disponível na loja
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="fDestaque"/> Produto em destaque
+        </label>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn-cancel" onclick="fecharForm()">Cancelar</button>
+      <button class="btn-save" onclick="guardarProduto()">Guardar produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc,
+    deleteDoc, doc, query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  // ─── CLOUDINARY (upload de imagens) ────────
+  // 1. Cria conta grátis em cloudinary.com
+  // 2. Dashboard → copia o "Cloud Name"
+  // 3. Settings → Upload → Add upload preset → Signing Mode: Unsigned
+  const CLOUDINARY_CLOUD_NAME = "dw958rv3b";
+  const CLOUDINARY_UPLOAD_PRESET = "seba-uploads";
+
+  // ─── CONFIG (igual ao index.html) ─────────
+  const firebaseConfig = {
+    apiKey: "AIzaSyClDRWSRKQqnuEZIqwp-xAE5_GO1Mqe9SA",
+    authDomain: "perfumaria-grande-seba.firebaseapp.com",
+    projectId: "perfumaria-grande-seba",
+    storageBucket: "perfumaria-grande-seba.firebasestorage.app",
+    messagingSenderId: "778632380574",
+    appId: "1:778632380574:web:62bdc808436ea960723b8f",
+    measurementId: "G-MJD3NLHKPS"
+  };
+
+  // ─── PASSWORD ADMIN ────────────────────────
+  // Muda para uma password segura
+  const ADMIN_PASS = "seba2025";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let produtos = [];
+  let editandoId = null;
+  let filtroTexto = '';
+  let filtroCat = '';
+
+  // ── UPLOAD DE IMAGEM ───────────────────────
+  window.previewImagem = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast('⚠️ Imagem demasiado grande (máx. 5MB)'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('uploadArea').innerHTML =
+        `<img class="upload-preview-img" src="${e.target.result}" alt="Preview"/>`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function uploadImagem(file) {
+    if (CLOUDINARY_CLOUD_NAME === "COLOCA_AQUI" || CLOUDINARY_UPLOAD_PRESET === "COLOCA_AQUI") {
+      throw new Error('Cloudinary não configurado');
+    }
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    formData.append('folder', 'grande-seba-produtos');
+
+    document.getElementById('uploadProgress').style.display = 'block';
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          document.getElementById('progressFill').style.width = pct + '%';
+          document.getElementById('progressLabel').textContent = `A fazer upload... ${pct}%`;
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          document.getElementById('progressLabel').textContent = '✓ Upload concluído';
+          document.getElementById('fImagem').value = data.secure_url;
+          resolve(data.secure_url);
+        } else {
+          reject(new Error('Falha no upload Cloudinary: ' + xhr.statusText));
+        }
+      };
+      xhr.onerror = () => reject(new Error('Erro de rede no upload'));
+      xhr.send(formData);
+    });
+  }
+  window.entrar = function() {
+    const pass = document.getElementById('loginPass').value;
+    if (pass === ADMIN_PASS) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      carregarProdutos();
+    } else {
+      document.getElementById('loginErr').textContent = 'Palavra-passe incorrecta.';
+    }
+  }
+  window.sair = function() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminApp').style.display = 'none';
+    document.getElementById('loginPass').value = '';
+  }
+
+  // ── CARREGAR ───────────────────────────────
+  async function carregarProdutos() {
+    try {
+      const snap = await getDocs(query(collection(db, "produtos"), orderBy("nome")));
+      produtos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+      // Demo sem Firebase
+      produtos = [
+        { id:'p1', nome:'Chanel N°5 EDP', categoria:'feminino', tipo:'perfume', preco:18500, quantidade:5, descricao:'Floral aldéico clássico.', imagem_url:'', disponivel:true, destaque:true },
+        { id:'p2', nome:'Dior Sauvage EDT', categoria:'masculino', tipo:'perfume', preco:15000, quantidade:8, descricao:'Fresco e vigoroso.', imagem_url:'', disponivel:true, destaque:true },
+        { id:'p3', nome:'CK One EDT', categoria:'unissexo', tipo:'perfume', preco:9500, quantidade:0, descricao:'Leve e fresco.', imagem_url:'', disponivel:false, destaque:false },
+      ];
+    }
+    actualizarStats();
+    renderTabela();
+  }
+
+  function actualizarStats() {
+    document.getElementById('statTotal').textContent = produtos.length;
+    document.getElementById('statFem').textContent = produtos.filter(p=>p.categoria==='feminino').length;
+    document.getElementById('statMasc').textContent = produtos.filter(p=>p.categoria==='masculino').length;
+    document.getElementById('statActivos').textContent = produtos.filter(p=>p.disponivel!==false).length;
+  }
+
+  // ── TABELA ─────────────────────────────────
+  window.filtrarTabela = function(texto, cat) {
+    if (texto !== undefined) filtroTexto = texto.toLowerCase();
+    if (cat !== undefined) filtroCat = cat;
+    renderTabela();
+  }
+
+  function renderTabela() {
+    let lista = produtos;
+    if (filtroTexto) lista = lista.filter(p => p.nome.toLowerCase().includes(filtroTexto));
+    if (filtroCat) lista = lista.filter(p => p.categoria === filtroCat);
+
+    const body = document.getElementById('tabelaBody');
+    if (!lista.length) {
+      body.innerHTML = `<tr class="empty-row"><td colspan="9">Nenhum produto encontrado.</td></tr>`;
+      return;
+    }
+    body.innerHTML = lista.map(p => {
+      const bc = p.categoria==='feminino'?'badge-fem':p.categoria==='masculino'?'badge-masc':'badge-uni';
+      const bl = p.categoria==='feminino'?'Feminino':p.categoria==='masculino'?'Masculino':'Unissexo';
+      const imgHtml = p.imagem_url
+        ? `<div class="img-thumb"><img src="${p.imagem_url}" alt=""/></div>`
+        : `<div class="img-thumb">🧴</div>`;
+      const qtd = Number(p.quantidade ?? 0);
+      const stockHtml = qtd <= 0
+        ? `<span class="badge badge-off">Esgotado</span>`
+        : qtd <= 3
+          ? `<span style="color:#b45309;font-weight:600">${qtd} unid.</span>`
+          : `${qtd} unid.`;
+      return `
+      <tr>
+        <td>${imgHtml}</td>
+        <td><strong>${p.nome}</strong></td>
+        <td><span class="badge ${bc}">${bl}</span></td>
+        <td>${p.tipo||'—'}</td>
+        <td>${Number(p.preco).toLocaleString('pt-AO')}</td>
+        <td>${stockHtml}</td>
+        <td><span class="badge ${p.disponivel!==false?'badge-on':'badge-off'}">${p.disponivel!==false?'Activo':'Inactivo'}</span></td>
+        <td>${p.destaque?'⭐':'—'}</td>
+        <td>
+          <div class="actions">
+            <button class="btn-icon edit" onclick="editarProduto('${p.id}')">✏️ Editar</button>
+            <button class="btn-icon del" onclick="eliminarProduto('${p.id}')">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── FORM ───────────────────────────────────
+  window.abrirForm = function(id) {
+    editandoId = id || null;
+    document.getElementById('formTitle').textContent = id ? 'Editar Produto' : 'Novo Produto';
+    // Reset upload
+    document.getElementById('fImagemFile').value = '';
+    document.getElementById('uploadProgress').style.display = 'none';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('uploadArea').innerHTML = `<div class="upload-preview-empty"><span>📷</span><p>Clica para escolher uma foto</p><small>JPG, PNG ou WEBP · máx. 5MB</small></div>`;
+
+    if (id) {
+      const p = produtos.find(x => x.id === id);
+      document.getElementById('fNome').value = p.nome || '';
+      document.getElementById('fCategoria').value = p.categoria || 'unissexo';
+      document.getElementById('fTipo').value = p.tipo || 'perfume';
+      document.getElementById('fPreco').value = p.preco || '';
+      document.getElementById('fQuantidade').value = p.quantidade ?? 0;
+      document.getElementById('fDescricao').value = p.descricao || '';
+      document.getElementById('fImagem').value = p.imagem_url || '';
+      document.getElementById('fDisponivel').checked = p.disponivel !== false;
+      document.getElementById('fDestaque').checked = !!p.destaque;
+      if (p.imagem_url) {
+        document.getElementById('uploadArea').innerHTML = `<img class="upload-preview-img" src="${p.imagem_url}" alt="Preview"/>`;
+      }
+    } else {
+      ['fNome','fPreco','fDescricao','fImagem'].forEach(id => document.getElementById(id).value='');
+      document.getElementById('fQuantidade').value = 1;
+      document.getElementById('fCategoria').value = 'feminino';
+      document.getElementById('fTipo').value = 'perfume';
+      document.getElementById('fDisponivel').checked = true;
+      document.getElementById('fDestaque').checked = false;
+    }
+    document.getElementById('formOverlay').classList.add('open');
+  }
+  window.editarProduto = window.abrirForm;
+
+  window.fecharForm = function() {
+    document.getElementById('formOverlay').classList.remove('open');
+    editandoId = null;
+  }
+
+  window.guardarProduto = async function() {
+    const nome = document.getElementById('fNome').value.trim();
+    const preco = parseFloat(document.getElementById('fPreco').value);
+    if (!nome) { toast('⚠️ O nome é obrigatório'); return; }
+    if (!preco || preco <= 0) { toast('⚠️ Preço inválido'); return; }
+
+    // Upload de imagem se houver ficheiro seleccionado
+    const fileInput = document.getElementById('fImagemFile');
+    let imagemUrl = document.getElementById('fImagem').value.trim();
+    if (fileInput.files[0]) {
+      try {
+        document.querySelector('.btn-save').textContent = 'A fazer upload...';
+        document.querySelector('.btn-save').disabled = true;
+        imagemUrl = await uploadImagem(fileInput.files[0]);
+      } catch(e) {
+        toast(e.message === 'Cloudinary não configurado' ? '⚠️ Configura o Cloudinary primeiro (cloud name + preset)' : '⚠️ Erro no upload da imagem');
+        document.querySelector('.btn-save').textContent = 'Guardar produto';
+        document.querySelector('.btn-save').disabled = false;
+        return;
+      }
+    }
+
+    const dados = {
+      nome,
+      categoria: document.getElementById('fCategoria').value,
+      tipo: document.getElementById('fTipo').value,
+      preco,
+      quantidade: Math.max(0, parseInt(document.getElementById('fQuantidade').value) || 0),
+      descricao: document.getElementById('fDescricao').value.trim(),
+      imagem_url: imagemUrl,
+      disponivel: document.getElementById('fDisponivel').checked,
+      destaque: document.getElementById('fDestaque').checked,
+      actualizado_em: serverTimestamp(),
+    };
+
+    try {
+      if (editandoId) {
+        await updateDoc(doc(db, "produtos", editandoId), dados);
+        const idx = produtos.findIndex(p => p.id === editandoId);
+        produtos[idx] = { ...produtos[idx], ...dados };
+        toast('✓ Produto actualizado');
+      } else {
+        dados.criado_em = serverTimestamp();
+        const ref = await addDoc(collection(db, "produtos"), dados);
+        produtos.push({ id: ref.id, ...dados });
+        toast('✓ Produto criado com sucesso!');
+      }
+    } catch(e) {
+      console.error(e);
+      toast('⚠️ Erro ao guardar. Verifica a ligação.');
+      document.querySelector('.btn-save').textContent = 'Guardar produto';
+      document.querySelector('.btn-save').disabled = false;
+      return;
+    }
+    document.querySelector('.btn-save').textContent = 'Guardar produto';
+    document.querySelector('.btn-save').disabled = false;
+    fecharForm();
+    actualizarStats();
+    renderTabela();
+  }
+
+  window.eliminarProduto = async function(id) {
+    if (!confirm('Tens a certeza que queres eliminar este produto?')) return;
+    try {
+      await deleteDoc(doc(db, "produtos", id));
+    } catch(e) {}
+    produtos = produtos.filter(p => p.id !== id);
+    actualizarStats(); renderTabela();
+    toast('🗑️ Produto eliminado');
+  }
+
+  // ── TOAST ──────────────────────────────────
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
