@@ -447,19 +447,35 @@
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal-box {
       background: var(--white); border-radius: 12px;
-      max-width: 520px; width: 100%; max-height: 85vh;
+      max-width: 980px; width: 100%; max-height: 90vh;
       overflow-y: auto; transform: scale(0.95);
       transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
     }
     .modal-overlay.open .modal-box { transform: scale(1); }
+    .modal-layout {
+      display: grid; grid-template-columns: minmax(280px, 44%) 1fr;
+      gap: 1.5rem; padding: 1.5rem;
+    }
+    .modal-gallery { min-width: 0; }
     .modal-img {
-      width: 100%; aspect-ratio: 16/9; object-fit: cover;
-      background: var(--offwhite); border-radius: 12px 12px 0 0;
+      width: 100%; aspect-ratio: 1/1; object-fit: cover;
+      background: var(--offwhite); border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 5rem; overflow: hidden;
+      font-size: 5rem; overflow: hidden; border: 1px solid var(--border);
     }
     .modal-img img { width: 100%; height: 100%; object-fit: cover; }
-    .modal-body { padding: 1.5rem; }
+    .modal-thumbs {
+      display: flex; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto;
+      padding-bottom: 0.1rem;
+    }
+    .modal-thumb {
+      width: 62px; height: 62px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--offwhite); overflow: hidden; cursor: pointer; flex: 0 0 auto;
+      padding: 0; transition: border-color 0.2s, opacity 0.2s;
+    }
+    .modal-thumb.active { border-color: var(--black); }
+    .modal-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .modal-body { padding: 0; min-width: 0; }
     .modal-tipo {
       font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
       color: var(--gray); margin-bottom: 0.4rem;
@@ -473,7 +489,33 @@
       margin-bottom: 1.25rem;
     }
     .modal-preco {
-      font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem;
+      font-size: 1.45rem; font-weight: 700; margin-bottom: 0.8rem;
+    }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .modal-chip {
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.25rem 0.65rem; font-size: 0.72rem; color: var(--coal);
+      background: var(--offwhite);
+    }
+    .modal-stock-ok { color: #166534; background: #dcfce7; border-color: #bbf7d0; }
+    .modal-stock-low { color: #92400e; background: #fffbeb; border-color: #fcd34d; }
+    .modal-stock-out { color: #991b1b; background: #fee2e2; border-color: #fecaca; }
+    .modal-buy-row {
+      display: grid; grid-template-columns: auto 1fr; gap: 0.75rem;
+      align-items: stretch; margin-bottom: 1.25rem;
+    }
+    .modal-qty {
+      display: inline-flex; align-items: center; border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden; height: 42px;
+    }
+    .modal-qty button {
+      width: 38px; height: 100%; border: none; background: var(--offwhite);
+      cursor: pointer; font-size: 1rem; color: var(--black);
+    }
+    .modal-qty input {
+      width: 54px; height: 100%; border: none; border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border); text-align: center;
+      font-family: 'DM Sans', sans-serif; font-weight: 600; outline: none;
     }
     .modal-footer {
       display: flex; gap: 0.75rem;
@@ -493,6 +535,45 @@
     }
     .btn-add-modal:hover { background: var(--coal); }
     .btn-add-modal:disabled { background: var(--gray); cursor: not-allowed; }
+    .modal-section {
+      border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 1.1rem;
+    }
+    .modal-section h3 {
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--coal); margin-bottom: 0.75rem;
+    }
+    .related-grid {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem;
+    }
+    .related-card {
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+      background: var(--white); cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+    }
+    .related-card:hover { border-color: var(--coal); transform: translateY(-1px); }
+    .related-img {
+      aspect-ratio: 1/1; background: var(--offwhite); display: flex;
+      align-items: center; justify-content: center; color: var(--gray); overflow: hidden;
+    }
+    .related-img img { width: 100%; height: 100%; object-fit: cover; }
+    .related-body { padding: 0.55rem; }
+    .related-name {
+      font-size: 0.76rem; font-weight: 600; line-height: 1.25; color: var(--black);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      min-height: 2.4em;
+    }
+    .related-price { font-size: 0.78rem; color: var(--coal); margin-top: 0.35rem; font-weight: 600; }
+    .combo-box {
+      border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem;
+      background: var(--offwhite); display: flex; justify-content: space-between;
+      align-items: center; gap: 1rem;
+    }
+    .combo-box p { font-size: 0.82rem; color: var(--coal); line-height: 1.45; }
+    .combo-box strong { display: block; margin-bottom: 0.2rem; }
+    .combo-box button {
+      border: none; background: var(--black); color: var(--white); border-radius: 7px;
+      padding: 0.6rem 0.85rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; white-space: nowrap;
+    }
 
     /* ── FOOTER ──────────────────────────────── */
     footer {
@@ -533,6 +614,13 @@
       .filter-right { display: none; }
       .catalogo { padding: 1.5rem 1rem 3rem; }
       .produtos-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .modal-layout { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
+      .modal-box { max-height: 94vh; }
+      .modal-buy-row { grid-template-columns: 1fr; }
+      .modal-qty { width: 100%; }
+      .modal-qty input { flex: 1; }
+      .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .combo-box { align-items: stretch; flex-direction: column; }
       footer { padding: 2rem 1rem; }
     }
   </style>
@@ -583,9 +671,6 @@
     </div>
     <select class="tipo-select" id="tipoSelect" onchange="pesquisar()">
       <option value="">Todos os tipos</option>
-      <option value="perfume">Perfume</option>
-      <option value="cosmetico">Cosmético</option>
-      <option value="cuidado">Cuidado</option>
     </select>
   </div>
 </div>
@@ -674,15 +759,36 @@
 <!-- MODAL PRODUTO -->
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
   <div class="modal-box" id="modalBox">
-    <div class="modal-img" id="modalImg"></div>
-    <div class="modal-body">
-      <p class="modal-tipo" id="modalTipo"></p>
-      <h2 class="modal-nome" id="modalNome"></h2>
-      <p class="modal-desc" id="modalDesc"></p>
-      <p class="modal-preco" id="modalPreco"></p>
-      <div class="modal-footer">
-        <button class="btn-close-modal" onclick="fecharModalBtn()">Fechar</button>
-        <button class="btn-add-modal" id="modalAddBtn">+ Adicionar ao carrinho</button>
+    <div class="modal-layout">
+      <div class="modal-gallery">
+        <div class="modal-img" id="modalImg"></div>
+        <div class="modal-thumbs" id="modalThumbs"></div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-tipo" id="modalTipo"></p>
+        <h2 class="modal-nome" id="modalNome"></h2>
+        <p class="modal-preco" id="modalPreco"></p>
+        <div class="modal-meta" id="modalMeta"></div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-buy-row">
+          <div class="modal-qty">
+            <button type="button" onclick="alterarQtyModal(-1)">−</button>
+            <input id="modalQty" type="number" min="1" value="1" oninput="validarQtyModal()"/>
+            <button type="button" onclick="alterarQtyModal(1)">+</button>
+          </div>
+          <button class="btn-add-modal" id="modalAddBtn">Adicionar ao carrinho</button>
+        </div>
+        <div class="modal-section" id="modalComboSection" style="display:none">
+          <h3>Combo disponível</h3>
+          <div id="modalCombo"></div>
+        </div>
+        <div class="modal-section" id="modalRelatedSection" style="display:none">
+          <h3>Também podes gostar</h3>
+          <div class="related-grid" id="modalRelated"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-close-modal" onclick="fecharModalBtn()">Fechar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -694,7 +800,7 @@
 <!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, addDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
 
   // ─── CONFIG FIREBASE ───────────────────────
@@ -715,6 +821,49 @@
 
   // NÚMERO WHATSAPP DA LOJA — substitui pelo número real do cliente
   window.WA_NUMBER = "244933609090";
+
+  // ─── TIPOS DE PRODUTO ──────────────────────
+  // Lista única de tipos/categorias de produto, organizada por grupo.
+  // Para adicionar um novo tipo no futuro, basta acrescentar um item aqui
+  // (e fazer o mesmo no admin.html, para os dois ficarem sincronizados).
+  const TIPOS = [
+    { grupo: 'Perfumaria', itens: [
+      { value: 'perfume', label: 'Perfume' },
+      { value: 'perfume-sul-africano', label: 'Perfume Sul-Africano' },
+      { value: 'miniatura', label: 'Miniatura de Perfume' },
+      { value: 'oleo-perfumado', label: 'Óleo Perfumado' },
+      { value: 'agua-colonia', label: 'Água de Colónia' },
+    ]},
+    { grupo: 'Cuidado & Beleza', itens: [
+      { value: 'creme', label: 'Creme' },
+      { value: 'hidratante', label: 'Hidratante' },
+      { value: 'desodorante', label: 'Desodorante' },
+      { value: 'gel', label: 'Gel' },
+      { value: 'cabelo', label: 'Produtos para Cabelo' },
+      { value: 'skincare', label: 'Skincare' },
+      { value: 'esfoliante', label: 'Esfoliante' },
+    ]},
+    { grupo: 'Outros', itens: [
+      { value: 'infantil', label: 'Produtos para Crianças' },
+      { value: 'outro', label: 'Outro' },
+    ]},
+  ];
+
+  function tipoLabel(v) {
+    for (const g of TIPOS) { const f = g.itens.find(i => i.value === v); if (f) return f.label; }
+    return v || 'Produto';
+  }
+
+  function renderTipoOptions(selectEl, incluirTodos) {
+    if (!selectEl) return;
+    let html = incluirTodos ? `<option value="">Todos os tipos</option>` : '';
+    TIPOS.forEach(g => {
+      html += `<optgroup label="${g.grupo}">`;
+      g.itens.forEach(i => html += `<option value="${i.value}">${i.label}</option>`);
+      html += `</optgroup>`;
+    });
+    selectEl.innerHTML = html;
+  }
 
   // ─── DADOS ────────────────────────────────
   let todosOsProdutos = [];
@@ -811,7 +960,7 @@
           ${esgotado ? `<div class="card-esgotado-overlay">Esgotado</div>` : ''}
         </div>
         <div class="card-body">
-          <p class="card-tipo">${p.tipo || 'Produto'}</p>
+          <p class="card-tipo">${tipoLabel(p.tipo)}</p>
           <h3 class="card-nome">${p.nome}</h3>
           <p class="card-desc">${p.descricao || ''}</p>
           ${stockBaixo ? `<p class="card-stock-low">Últimas ${p.quantidade} unidades</p>` : ''}
@@ -834,21 +983,22 @@
 
   function formatarPreco(n) { return Number(n).toLocaleString('pt-AO'); }
 
-  window.adicionarAoCarrinho = function(id) {
+  window.adicionarAoCarrinho = function(id, qty = 1) {
     const prod = todosOsProdutos.find(p => p.id === id);
     if (!prod) return;
+    qty = Math.max(1, parseInt(qty, 10) || 1);
     const idx = carrinho.findIndex(c => c.id === id);
     const qtyActual = idx >= 0 ? carrinho[idx].qty : 0;
-    if (prod.quantidade !== undefined && qtyActual + 1 > Number(prod.quantidade)) {
+    if (prod.quantidade !== undefined && qtyActual + qty > Number(prod.quantidade)) {
       mostrarToast('⚠️ Apenas ' + prod.quantidade + ' em stock');
       return;
     }
-    if (idx >= 0) carrinho[idx].qty++;
-    else carrinho.push({ id, nome: prod.nome, preco: prod.preco, imagem_url: prod.imagem_url || '', qty: 1 });
+    if (idx >= 0) carrinho[idx].qty += qty;
+    else carrinho.push({ id, nome: prod.nome, preco: prod.preco, imagem_url: prod.imagem_url || '', qty });
     salvarCarrinho(); actualizarUI();
     const btn = document.getElementById('btn-' + id);
     if (btn) { btn.classList.add('added'); btn.textContent = '✓ Adicionado'; setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Adicionar'; }, 1400); }
-    mostrarToast('✓ ' + prod.nome + ' adicionado');
+    mostrarToast('✓ ' + qty + 'x ' + prod.nome + ' adicionado');
   }
 
   function actualizarUI() {
@@ -962,27 +1112,181 @@
 
   // ─── MODAL PRODUTO ────────────────────────
   let produtoActivo = null;
+  let imagensModal = [];
+
+  function imagensDoProduto(p) {
+    const lista = Array.isArray(p.imagens) ? p.imagens : [];
+    return [...new Set([p.imagem_url, ...lista].filter(Boolean))];
+  }
+
+  function renderImagemModal(src) {
+    const imgEl = document.getElementById('modalImg');
+    imgEl.innerHTML = src ? `<img src="${src}" alt="${produtoActivo?.nome || 'Produto'}"/>` : '🧴';
+    document.querySelectorAll('.modal-thumb').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.src === src);
+    });
+  }
+  window.renderImagemModal = renderImagemModal;
+
+  function renderThumbsModal() {
+    const thumbs = document.getElementById('modalThumbs');
+    if (imagensModal.length <= 1) {
+      thumbs.innerHTML = '';
+      return;
+    }
+    thumbs.innerHTML = imagensModal.map((src, i) => `
+      <button class="modal-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" onclick="renderImagemModal('${src.replace(/'/g, "\\'")}')">
+        <img src="${src}" alt="${produtoActivo.nome} ${i + 1}"/>
+      </button>
+    `).join('');
+  }
+
+  function stockInfo(p) {
+    const temStock = p.quantidade !== undefined;
+    const qtd = Number(p.quantidade ?? 0);
+    if (!temStock) return { texto: 'Disponível', classe: 'modal-stock-ok', max: 99, esgotado: false };
+    if (qtd <= 0) return { texto: 'Esgotado', classe: 'modal-stock-out', max: 0, esgotado: true };
+    if (qtd <= 3) return { texto: `Últimas ${qtd} unidades`, classe: 'modal-stock-low', max: qtd, esgotado: false };
+    return { texto: `${qtd} unidades em stock`, classe: 'modal-stock-ok', max: qtd, esgotado: false };
+  }
+
+  function renderMetaModal(p, stock) {
+    const categoriaLabel = p.categoria === 'feminino' ? 'Feminino' : p.categoria === 'masculino' ? 'Masculino' : 'Unissexo';
+    document.getElementById('modalMeta').innerHTML = `
+      <span class="modal-chip">${categoriaLabel}</span>
+      <span class="modal-chip">${tipoLabel(p.tipo)}</span>
+      <span class="modal-chip ${stock.classe}">${stock.texto}</span>
+      ${p.destaque ? '<span class="modal-chip">Destaque</span>' : ''}
+    `;
+  }
+
+  function renderRelacionados(p) {
+    const relacionados = todosOsProdutos
+      .filter(x => x.id !== p.id && x.disponivel !== false && x.categoria === p.categoria)
+      .sort((a, b) => Number(b.destaque === true) - Number(a.destaque === true))
+      .slice(0, 4);
+    const section = document.getElementById('modalRelatedSection');
+    const grid = document.getElementById('modalRelated');
+    if (!relacionados.length) {
+      section.style.display = 'none';
+      grid.innerHTML = '';
+      return;
+    }
+    section.style.display = 'block';
+    grid.innerHTML = relacionados.map(r => `
+      <div class="related-card" onclick="abrirModal('${r.id}')">
+        <div class="related-img">${r.imagem_url ? `<img src="${r.imagem_url}" alt="${r.nome}"/>` : '🧴'}</div>
+        <div class="related-body">
+          <p class="related-name">${r.nome}</p>
+          <p class="related-price">${formatarPreco(r.preco)} Kz</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderComboModal(p) {
+    const ids = Array.isArray(p.combo_ids) ? p.combo_ids : [];
+    const produtosCombo = ids.map(id => todosOsProdutos.find(x => x.id === id)).filter(Boolean);
+    const section = document.getElementById('modalComboSection');
+    const box = document.getElementById('modalCombo');
+    if (!produtosCombo.length && !p.combo_preco) {
+      section.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+    const nomes = produtosCombo.length ? produtosCombo.map(x => x.nome).join(' + ') : 'Pack especial';
+    const preco = p.combo_preco ? `${formatarPreco(p.combo_preco)} Kz` : 'Preço especial';
+    section.style.display = 'block';
+    box.innerHTML = `
+      <div class="combo-box">
+        <p><strong>${p.combo_nome || 'Compra em conjunto'}</strong>${p.nome}${produtosCombo.length ? ' + ' + nomes : ''}<br/>${preco}</p>
+        <button onclick="adicionarComboAoCarrinho('${p.id}')">Adicionar combo</button>
+      </div>
+    `;
+  }
+
   window.abrirModal = function(id) {
     const p = todosOsProdutos.find(x => x.id === id);
     if (!p) return;
     produtoActivo = p;
-    document.getElementById('modalTipo').textContent = p.tipo || 'Produto';
+    const stock = stockInfo(p);
+    imagensModal = imagensDoProduto(p);
+
+    document.getElementById('modalTipo').textContent = tipoLabel(p.tipo);
     document.getElementById('modalNome').textContent = p.nome;
-    document.getElementById('modalDesc').textContent = p.descricao || '';
     document.getElementById('modalPreco').textContent = formatarPreco(p.preco) + ' Kz';
-    const imgEl = document.getElementById('modalImg');
-    imgEl.innerHTML = p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}"/>` : '🧴';
-    const esgotado = p.quantidade !== undefined && Number(p.quantidade) <= 0;
+    document.getElementById('modalDesc').textContent = p.descricao || 'Sem descrição disponível.';
+    renderMetaModal(p, stock);
+    renderImagemModal(imagensModal[0] || '');
+    renderThumbsModal();
+
+    const qtyInput = document.getElementById('modalQty');
+    qtyInput.value = stock.esgotado ? 0 : 1;
+    qtyInput.min = stock.esgotado ? 0 : 1;
+    qtyInput.max = stock.max;
+    qtyInput.disabled = stock.esgotado;
+
     const addBtn = document.getElementById('modalAddBtn');
-    addBtn.disabled = esgotado;
-    addBtn.textContent = esgotado ? 'Esgotado' : '+ Adicionar ao carrinho';
-    addBtn.onclick = esgotado ? null : () => {
-      adicionarAoCarrinho(id);
+    addBtn.disabled = stock.esgotado;
+    addBtn.textContent = stock.esgotado ? 'Esgotado' : 'Adicionar ao carrinho';
+    addBtn.onclick = stock.esgotado ? null : () => {
+      adicionarAoCarrinho(id, document.getElementById('modalQty').value);
       fecharModalBtn();
     };
+
+    renderComboModal(p);
+    renderRelacionados(p);
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
+  window.alterarQtyModal = function(delta) {
+    const input = document.getElementById('modalQty');
+    const min = Number(input.min || 1);
+    const max = Number(input.max || 99);
+    const actual = parseInt(input.value, 10) || min;
+    input.value = Math.min(max, Math.max(min, actual + delta));
+  }
+
+  window.validarQtyModal = function() {
+    const input = document.getElementById('modalQty');
+    const min = Number(input.min || 1);
+    const max = Number(input.max || 99);
+    const actual = parseInt(input.value, 10) || min;
+    input.value = Math.min(max, Math.max(min, actual));
+  }
+
+  window.adicionarComboAoCarrinho = function(id) {
+    const p = todosOsProdutos.find(x => x.id === id);
+    if (!p) return;
+    const produtosCombo = (Array.isArray(p.combo_ids) ? p.combo_ids : [])
+      .map(pid => todosOsProdutos.find(x => x.id === pid))
+      .filter(Boolean);
+
+    if (p.combo_preco) {
+      const comboId = `combo-${p.id}`;
+      const idx = carrinho.findIndex(c => c.id === comboId);
+      const nomes = [p.nome, ...produtosCombo.map(x => x.nome)].join(' + ');
+      if (idx >= 0) carrinho[idx].qty++;
+      else {
+        carrinho.push({
+          id: comboId,
+          nome: p.combo_nome || `Combo: ${nomes}`,
+          preco: Number(p.combo_preco),
+          imagem_url: p.imagem_url || produtosCombo[0]?.imagem_url || '',
+          qty: 1
+        });
+      }
+      salvarCarrinho();
+      actualizarUI();
+      mostrarToast('✓ Combo adicionado');
+    } else {
+      adicionarAoCarrinho(id, 1);
+      produtosCombo.forEach(item => adicionarAoCarrinho(item.id, 1));
+    }
+    fecharModalBtn();
+  }
+
   window.fecharModal = function(e) {
     if (e.target === document.getElementById('modalOverlay')) fecharModalBtn();
   }
@@ -1002,6 +1306,7 @@
   window.mostrarToast = mostrarToast;
 
   // ─── INIT ─────────────────────────────────
+  renderTipoOptions(document.getElementById('tipoSelect'), true);
   actualizarUI();
   carregarProdutos();
 </script>
