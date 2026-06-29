@@ -202,12 +202,22 @@
     .badge-masc { background: #EEF4FA; color: #5A8FB8; }
     .badge-uni  { background: var(--offwhite); color: var(--gray); }
     .card-destaque {
-      position: absolute; top: 0.6rem; right: 0.6rem;
+      position: absolute; top: 2.3rem; left: 0.6rem;
       background: var(--black); color: var(--white);
       padding: 0.2rem 0.5rem; border-radius: 4px;
       font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em;
       text-transform: uppercase;
     }
+    .card-fav-btn {
+      position: absolute; top: 0.6rem; right: 0.6rem; z-index: 4;
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.92); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem; color: var(--gray); line-height: 1;
+      transition: transform 0.15s, color 0.15s;
+    }
+    .card-fav-btn:hover { transform: scale(1.1); }
+    .card-fav-btn.active { color: #e0245e; }
     .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
     .card-tipo {
       font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
@@ -447,35 +457,19 @@
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal-box {
       background: var(--white); border-radius: 12px;
-      max-width: 980px; width: 100%; max-height: 90vh;
+      max-width: 520px; width: 100%; max-height: 85vh;
       overflow-y: auto; transform: scale(0.95);
       transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
     }
     .modal-overlay.open .modal-box { transform: scale(1); }
-    .modal-layout {
-      display: grid; grid-template-columns: minmax(280px, 44%) 1fr;
-      gap: 1.5rem; padding: 1.5rem;
-    }
-    .modal-gallery { min-width: 0; }
     .modal-img {
-      width: 100%; aspect-ratio: 1/1; object-fit: cover;
-      background: var(--offwhite); border-radius: 10px;
+      width: 100%; aspect-ratio: 16/9; object-fit: cover;
+      background: var(--offwhite); border-radius: 12px 12px 0 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 5rem; overflow: hidden; border: 1px solid var(--border);
+      font-size: 5rem; overflow: hidden; position: relative;
     }
     .modal-img img { width: 100%; height: 100%; object-fit: cover; }
-    .modal-thumbs {
-      display: flex; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto;
-      padding-bottom: 0.1rem;
-    }
-    .modal-thumb {
-      width: 62px; height: 62px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--offwhite); overflow: hidden; cursor: pointer; flex: 0 0 auto;
-      padding: 0; transition: border-color 0.2s, opacity 0.2s;
-    }
-    .modal-thumb.active { border-color: var(--black); }
-    .modal-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .modal-body { padding: 0; min-width: 0; }
+    .modal-body { padding: 1.5rem; }
     .modal-tipo {
       font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
       color: var(--gray); margin-bottom: 0.4rem;
@@ -489,33 +483,7 @@
       margin-bottom: 1.25rem;
     }
     .modal-preco {
-      font-size: 1.45rem; font-weight: 700; margin-bottom: 0.8rem;
-    }
-    .modal-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-    .modal-chip {
-      border: 1px solid var(--border); border-radius: 100px;
-      padding: 0.25rem 0.65rem; font-size: 0.72rem; color: var(--coal);
-      background: var(--offwhite);
-    }
-    .modal-stock-ok { color: #166534; background: #dcfce7; border-color: #bbf7d0; }
-    .modal-stock-low { color: #92400e; background: #fffbeb; border-color: #fcd34d; }
-    .modal-stock-out { color: #991b1b; background: #fee2e2; border-color: #fecaca; }
-    .modal-buy-row {
-      display: grid; grid-template-columns: auto 1fr; gap: 0.75rem;
-      align-items: stretch; margin-bottom: 1.25rem;
-    }
-    .modal-qty {
-      display: inline-flex; align-items: center; border: 1px solid var(--border);
-      border-radius: 8px; overflow: hidden; height: 42px;
-    }
-    .modal-qty button {
-      width: 38px; height: 100%; border: none; background: var(--offwhite);
-      cursor: pointer; font-size: 1rem; color: var(--black);
-    }
-    .modal-qty input {
-      width: 54px; height: 100%; border: none; border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border); text-align: center;
-      font-family: 'DM Sans', sans-serif; font-weight: 600; outline: none;
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem;
     }
     .modal-footer {
       display: flex; gap: 0.75rem;
@@ -535,44 +503,145 @@
     }
     .btn-add-modal:hover { background: var(--coal); }
     .btn-add-modal:disabled { background: var(--gray); cursor: not-allowed; }
-    .modal-section {
-      border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 1.1rem;
+
+    /* Modal de produto - visual moderno inspirado em marketplace */
+    .modal-overlay {
+      background: rgba(10,10,10,0.62);
+      transition: opacity 0.25s ease;
     }
-    .modal-section h3 {
-      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--coal); margin-bottom: 0.75rem;
+    .modal-box {
+      width: min(100%, 900px);
+      max-width: 900px;
+      max-height: calc(100vh - 2rem);
+      position: relative;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.22);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
     }
-    .related-grid {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem;
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-close-icon {
+      position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px;
+      border: 1px solid var(--border); border-radius: 50%; background: rgba(255,255,255,0.94);
+      color: var(--black); cursor: pointer; font-size: 1.15rem; line-height: 1;
+      display: flex; align-items: center; justify-content: center; z-index: 3;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .modal-close-icon:hover { background: var(--offwhite); border-color: var(--gray); transform: rotate(90deg); }
+    .modal-main {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
+      gap: 2rem; padding: 2rem;
+    }
+    .modal-gallery { min-width: 0; }
+    .modal-img {
+      aspect-ratio: 1/1;
+      border-radius: 12px;
+      color: var(--gray);
+      font-size: 4rem;
+    }
+    .modal-img img { display: block; object-fit: cover; }
+    .modal-thumbs {
+      display: flex; gap: 0.6rem; margin-top: 0.75rem; overflow-x: auto;
+      padding-bottom: 0.2rem; scrollbar-width: thin;
+    }
+    .modal-thumb {
+      width: 64px; height: 64px; flex: 0 0 64px; border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden; background: var(--offwhite); cursor: pointer;
+      padding: 0; transition: border-color 0.2s, transform 0.2s;
+    }
+    .modal-thumb:hover, .modal-thumb.active { border-color: var(--black); transform: translateY(-1px); }
+    .modal-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .modal-body { padding: 0 0.4rem 0 0; min-width: 0; }
+    .modal-tipo {
+      display: inline-flex; align-items: center; width: fit-content;
+      color: var(--accent); background: var(--accent-soft); border-radius: 999px;
+      padding: 0.35rem 0.65rem; margin-bottom: 0.8rem; font-weight: 600;
+    }
+    .modal-nome {
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      line-height: 1.08;
+      margin-bottom: 0.9rem;
+    }
+    .modal-desc {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      white-space: pre-line;
+    }
+    .modal-preco {
+      font-size: 1.55rem;
+      margin-bottom: 1rem;
+    }
+    .modal-stock {
+      font-size: 0.88rem; font-weight: 600; color: #1f8f48; margin-bottom: 1rem;
+    }
+    .modal-stock.esgotado { color: #D92D20; }
+    .modal-qty-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      margin-bottom: 1.25rem; padding: 0.85rem 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .modal-qty-label { font-size: 0.85rem; color: var(--coal); font-weight: 600; }
+    .modal-qty {
+      display: grid; grid-template-columns: 38px 54px 38px; height: 38px;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--white);
+    }
+    .modal-qty button {
+      border: none; background: var(--offwhite); color: var(--black); cursor: pointer;
+      font-size: 1.05rem; font-weight: 600; transition: background 0.2s;
+    }
+    .modal-qty button:hover { background: #EAEAEA; }
+    .modal-qty button:disabled { color: var(--gray); cursor: not-allowed; }
+    .modal-qty input {
+      width: 100%; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+      text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 600; outline: none;
+    }
+    .modal-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .btn-add-modal, .btn-buy-modal {
+      min-height: 46px; padding: 0.8rem 1rem; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 700; transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    }
+    .btn-buy-modal {
+      background: #25D366; color: var(--white); border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-buy-modal:hover { background: #1ebe5d; }
+    .btn-add-modal:active, .btn-buy-modal:active { transform: scale(0.98); }
+    .btn-add-modal:disabled, .btn-buy-modal:disabled { opacity: 0.45; cursor: not-allowed; }
+    .modal-related { padding: 0 2rem 2rem; }
+    .modal-related-title {
+      font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600;
+      margin-bottom: 0.9rem; color: var(--black);
+    }
+    .modal-related-scroll {
+      display: grid; grid-auto-flow: column; grid-auto-columns: 150px; gap: 0.85rem;
+      overflow-x: auto; padding: 0.15rem 0 0.35rem; scrollbar-width: thin;
     }
     .related-card {
-      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
-      background: var(--white); cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      border: 1px solid var(--border); border-radius: 8px; background: var(--white);
+      cursor: pointer; overflow: hidden; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
-    .related-card:hover { border-color: var(--coal); transform: translateY(-1px); }
+    .related-card:hover { transform: translateY(-2px); border-color: var(--gray); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
     .related-img {
-      aspect-ratio: 1/1; background: var(--offwhite); display: flex;
-      align-items: center; justify-content: center; color: var(--gray); overflow: hidden;
+      width: 100%; aspect-ratio: 1/1; background: var(--offwhite); display: flex;
+      align-items: center; justify-content: center; color: var(--gray); font-size: 2rem; overflow: hidden;
     }
-    .related-img img { width: 100%; height: 100%; object-fit: cover; }
-    .related-body { padding: 0.55rem; }
+    .related-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .related-info { padding: 0.7rem; }
     .related-name {
-      font-size: 0.76rem; font-weight: 600; line-height: 1.25; color: var(--black);
+      font-size: 0.82rem; font-weight: 600; color: var(--black); line-height: 1.3;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-      min-height: 2.4em;
+      min-height: 2.15rem; margin-bottom: 0.35rem;
     }
-    .related-price { font-size: 0.78rem; color: var(--coal); margin-top: 0.35rem; font-weight: 600; }
-    .combo-box {
-      border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem;
-      background: var(--offwhite); display: flex; justify-content: space-between;
-      align-items: center; gap: 1rem;
-    }
-    .combo-box p { font-size: 0.82rem; color: var(--coal); line-height: 1.45; }
-    .combo-box strong { display: block; margin-bottom: 0.2rem; }
-    .combo-box button {
-      border: none; background: var(--black); color: var(--white); border-radius: 7px;
-      padding: 0.6rem 0.85rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
-      font-size: 0.78rem; white-space: nowrap;
+    .related-price { font-size: 0.9rem; font-weight: 700; color: var(--black); }
+    .related-empty { color: var(--gray); font-size: 0.9rem; padding: 0.75rem 0; }
+
+    @media (max-width: 700px) {
+      .modal-overlay { align-items: flex-end; padding: 0.65rem; }
+      .modal-box { max-height: calc(100vh - 1.3rem); }
+      .modal-main { grid-template-columns: 1fr; gap: 1.25rem; padding: 1.25rem; }
+      .modal-body { padding-right: 0; }
+      .modal-footer { grid-template-columns: 1fr; }
+      .modal-related { padding: 0 1.25rem 1.25rem; }
+      .modal-related-scroll { grid-auto-columns: 138px; }
     }
 
     /* ── FOOTER ──────────────────────────────── */
@@ -607,6 +676,59 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
+    /* ── CONTA / FAVORITOS ───────────────────── */
+    .account-view { padding: 1.25rem 1.5rem; }
+    .account-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+    .account-tab {
+      flex: 1; background: none; border: none; cursor: pointer;
+      padding: 0.6rem 0.5rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500; color: var(--gray);
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+    }
+    .account-tab.active { color: var(--black); border-bottom-color: var(--black); }
+    .account-form { display: flex; flex-direction: column; gap: 0.1rem; }
+    .account-link {
+      text-align: center; font-size: 0.78rem; color: var(--gray);
+      margin-top: 0.85rem; cursor: pointer; text-decoration: underline;
+    }
+    .account-link:hover { color: var(--black); }
+    .account-welcome {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+    }
+    .account-welcome p { font-size: 0.95rem; }
+    .btn-icon-logout {
+      background: none; border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.35rem 0.8rem; font-size: 0.78rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; color: var(--gray); transition: all 0.2s;
+    }
+    .btn-icon-logout:hover { border-color: var(--black); color: var(--black); }
+
+    .order-card {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.85rem 1rem; margin-bottom: 0.75rem;
+    }
+    .order-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .order-data { font-size: 0.75rem; color: var(--gray); }
+    .order-badge { font-size: 0.65rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: 100px; }
+    .order-itens { font-size: 0.82rem; color: var(--coal); line-height: 1.4; margin-bottom: 0.3rem; }
+    .order-total { font-size: 0.9rem; font-weight: 600; }
+
+    .favoritos-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+    .fav-card {
+      display: flex; gap: 0.75rem; align-items: center;
+      border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem;
+    }
+    .fav-img {
+      width: 52px; height: 52px; border-radius: 6px; flex-shrink: 0;
+      background: var(--offwhite); display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; overflow: hidden; cursor: pointer;
+    }
+    .fav-img img { width: 100%; height: 100%; object-fit: cover; }
+    .fav-info { flex: 1; }
+    .fav-nome { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.15rem; }
+    .fav-preco { font-size: 0.8rem; color: var(--gray); }
+
     /* ── RESPONSIVE ──────────────────────────── */
     @media (max-width: 640px) {
       header { padding: 0 1rem; }
@@ -614,13 +736,6 @@
       .filter-right { display: none; }
       .catalogo { padding: 1.5rem 1rem 3rem; }
       .produtos-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-      .modal-layout { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
-      .modal-box { max-height: 94vh; }
-      .modal-buy-row { grid-template-columns: 1fr; }
-      .modal-qty { width: 100%; }
-      .modal-qty input { flex: 1; }
-      .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .combo-box { align-items: stretch; flex-direction: column; }
       footer { padding: 2rem 1rem; }
     }
   </style>
@@ -634,6 +749,7 @@
     <span class="logo-sub">Perfumes & Cosméticos</span>
   </div>
   <div class="header-right">
+    <button class="cart-btn" id="accountBtn" onclick="abrirConta()">👤 Conta</button>
     <button class="cart-btn" onclick="abrirCarrinho()">
       🛒 Carrinho
       <span class="cart-count hidden" id="cartCount">0</span>
@@ -756,40 +872,114 @@
   </div>
 </div>
 
+<!-- CONTA / ÁREA DO CLIENTE -->
+<div class="cart-overlay" id="accountOverlay" onclick="fecharConta()"></div>
+<div class="cart-drawer" id="accountDrawer">
+  <div class="cart-header">
+    <h2>A minha conta</h2>
+    <button class="close-btn" onclick="fecharConta()">✕</button>
+  </div>
+  <div class="cart-scroll">
+
+    <!-- VISTA: SEM SESSÃO INICIADA -->
+    <div id="accountLoginView" class="account-view">
+      <div class="account-tabs">
+        <button class="account-tab active" id="tabLogin" onclick="mostrarTabConta('login')">Entrar</button>
+        <button class="account-tab" id="tabSignup" onclick="mostrarTabConta('signup')">Criar Conta</button>
+      </div>
+
+      <div id="loginFormBox" class="account-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="teu@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••"/>
+        </div>
+        <button class="btn-whatsapp" style="background:var(--black)" onclick="entrarConta()">Entrar</button>
+        <p class="account-link" onclick="recuperarPassword()">Esqueceste a password?</p>
+      </div>
+
+      <div id="signupFormBox" class="account-form" style="display:none">
+        <div class="form-group">
+          <label>Nome completo</label>
+          <input type="text" id="signupNome" placeholder="Ex: Maria Silva"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="teu@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="tel" id="signupTelefone" placeholder="Ex: 244 9xx xxx xxx"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="Mínimo 6 caracteres"/>
+        </div>
+        <button class="btn-whatsapp" style="background:var(--black)" onclick="criarConta()">Criar Conta</button>
+      </div>
+    </div>
+
+    <!-- VISTA: SESSÃO INICIADA -->
+    <div id="accountLoggedView" class="account-view" style="display:none">
+      <div class="account-welcome">
+        <p>Olá, <strong id="accountNomeCliente">—</strong> 👋</p>
+        <button class="btn-icon-logout" onclick="sairConta()">Sair</button>
+      </div>
+      <div class="account-tabs">
+        <button class="account-tab active" id="tabEncomendas" onclick="mostrarTabLogado('encomendas')">📦 Encomendas</button>
+        <button class="account-tab" id="tabFavoritos" onclick="mostrarTabLogado('favoritos')">♥ Favoritos</button>
+      </div>
+      <div id="minhasEncomendasView">
+        <div id="listaMinhasEncomendas"><!-- carregado via JS --></div>
+      </div>
+      <div id="meusFavoritosView" style="display:none">
+        <div class="favoritos-grid" id="listaFavoritos"><!-- carregado via JS --></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- MODAL PRODUTO -->
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
   <div class="modal-box" id="modalBox">
-    <div class="modal-layout">
+    <button class="modal-close-icon" type="button" onclick="fecharModal()" aria-label="Fechar modal">×</button>
+
+    <div class="modal-main">
       <div class="modal-gallery">
         <div class="modal-img" id="modalImg"></div>
         <div class="modal-thumbs" id="modalThumbs"></div>
       </div>
+
       <div class="modal-body">
         <p class="modal-tipo" id="modalTipo"></p>
         <h2 class="modal-nome" id="modalNome"></h2>
         <p class="modal-preco" id="modalPreco"></p>
-        <div class="modal-meta" id="modalMeta"></div>
         <p class="modal-desc" id="modalDesc"></p>
-        <div class="modal-buy-row">
+        <p class="modal-stock" id="modalStock"></p>
+
+        <div class="modal-qty-row">
+          <span class="modal-qty-label">Quantidade</span>
           <div class="modal-qty">
-            <button type="button" onclick="alterarQtyModal(-1)">−</button>
-            <input id="modalQty" type="number" min="1" value="1" oninput="validarQtyModal()"/>
-            <button type="button" onclick="alterarQtyModal(1)">+</button>
+            <button type="button" id="modalQtyMinus" onclick="alterarQtyModal(-1)">−</button>
+            <input type="number" id="modalQty" value="1" min="1" onchange="alterarQtyModal(0)" />
+            <button type="button" id="modalQtyPlus" onclick="alterarQtyModal(1)">+</button>
           </div>
-          <button class="btn-add-modal" id="modalAddBtn">Adicionar ao carrinho</button>
         </div>
-        <div class="modal-section" id="modalComboSection" style="display:none">
-          <h3>Combo disponível</h3>
-          <div id="modalCombo"></div>
-        </div>
-        <div class="modal-section" id="modalRelatedSection" style="display:none">
-          <h3>Também podes gostar</h3>
-          <div class="related-grid" id="modalRelated"></div>
-        </div>
+
         <div class="modal-footer">
-          <button class="btn-close-modal" onclick="fecharModalBtn()">Fechar</button>
+          <button class="btn-add-modal" id="modalAddBtn" type="button" onclick="adicionarDoModal()">Adicionar ao carrinho</button>
+          <button class="btn-buy-modal" id="modalBuyBtn" type="button" onclick="comprarAgoraModal()">Comprar agora</button>
         </div>
       </div>
+    </div>
+
+    <div class="modal-related">
+      <h3 class="modal-related-title">Produtos Relacionados</h3>
+      <div class="modal-related-scroll" id="modalRelacionados"></div>
     </div>
   </div>
 </div>
@@ -799,9 +989,68 @@
 
 <!-- FIREBASE -->
 <script type="module">
+
+// ── WEB PUSH NOTIFICATIONS ──────────────────
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+
+const messaging = getMessaging(app);
+
+// Pedir permissão e obter token
+async function requestNotificationPermission() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const token = await getToken(messaging, {
+        vapidKey: 'cVRC14tK8mV8SZhPEhnlvaeLnKdwO9V9FpA-gxtz8BA' // Copia do Firebase Console
+      });
+      console.log('FCM Token:', token);
+      // Guardar token no Firestore associado ao utilizador
+      await saveTokenToFirestore(token);
+      return token;
+    }
+  } catch (error) {
+    console.error('Erro ao obter token:', error);
+  }
+}
+
+// Guardar token no Firestore
+async function saveTokenToFirestore(token) {
+  try {
+    const userRef = doc(db, "users", "anonymous_user"); // ou usar ID do utilizador
+    await setDoc(userRef, { fcmToken: token }, { merge: true });
+    // OU inscrever num tópico "todos"
+    await subscribeToTopic(token);
+  } catch(e) {
+    console.error('Erro ao guardar token:', e);
+  }
+}
+
+// Inscrever token num tópico (para enviar a todos)
+async function subscribeToTopic(token) {
+  // Isto é feito no backend (Cloud Function ou servidor Node.js)
+  // Porque requer o Admin SDK
+}
+
+// Ouvir notificações em foreground
+onMessage(messaging, (payload) => {
+  console.log('Notificação recebida em foreground:', payload);
+  // Mostrar toast ou notificação customizada
+  mostrarToast(`📢 ${payload.notification.title}: ${payload.notification.body}`);
+});
+
+// Chamar a função quando o utilizador visitar a loja
+requestNotificationPermission();
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, query, orderBy, where,
+    serverTimestamp, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+  import {
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   // ─── CONFIG FIREBASE ───────────────────────
   const firebaseConfig = {
@@ -816,6 +1065,7 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
   const analytics = getAnalytics(app);
   window._db = db;
 
@@ -864,6 +1114,238 @@
     });
     selectEl.innerHTML = html;
   }
+
+  // ─── CONTA / ÁREA DO CLIENTE ───────────────
+  let clienteUser = null;  // utilizador autenticado (Firebase Auth)
+  let clienteData = null;  // { nome, email, telefone, favoritos: [] } — doc em "clientes/{uid}"
+
+  function traduzirErroAuth(code) {
+    const erros = {
+      'auth/email-already-in-use': '⚠️ Este email já está registado',
+      'auth/invalid-email':        '⚠️ Email inválido',
+      'auth/weak-password':        '⚠️ A password precisa de pelo menos 6 caracteres',
+      'auth/user-not-found':       '⚠️ Conta não encontrada',
+      'auth/wrong-password':       '⚠️ Email ou password incorrectos',
+      'auth/invalid-credential':   '⚠️ Email ou password incorrectos',
+      'auth/too-many-requests':    '⚠️ Muitas tentativas. Tenta de novo mais tarde',
+      'auth/missing-password':     '⚠️ Escreve a password',
+    };
+    return erros[code] || '⚠️ Ocorreu um erro. Tenta novamente';
+  }
+
+  window.abrirConta = function() {
+    document.getElementById('accountOverlay').classList.add('open');
+    document.getElementById('accountDrawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  window.fecharConta = function() {
+    document.getElementById('accountOverlay').classList.remove('open');
+    document.getElementById('accountDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  window.mostrarTabConta = function(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+    document.getElementById('loginFormBox').style.display  = tab === 'login'  ? 'flex' : 'none';
+    document.getElementById('signupFormBox').style.display = tab === 'signup' ? 'flex' : 'none';
+  }
+
+  window.mostrarTabLogado = function(tab) {
+    document.getElementById('tabEncomendas').classList.toggle('active', tab === 'encomendas');
+    document.getElementById('tabFavoritos').classList.toggle('active', tab === 'favoritos');
+    document.getElementById('minhasEncomendasView').style.display = tab === 'encomendas' ? 'block' : 'none';
+    document.getElementById('meusFavoritosView').style.display    = tab === 'favoritos'  ? 'block' : 'none';
+    if (tab === 'favoritos') renderFavoritos();
+  }
+
+  function mostrarVistaLogin() {
+    document.getElementById('accountLoginView').style.display  = 'block';
+    document.getElementById('accountLoggedView').style.display = 'none';
+  }
+  function mostrarVistaLogado() {
+    document.getElementById('accountLoginView').style.display  = 'none';
+    document.getElementById('accountLoggedView').style.display = 'block';
+    document.getElementById('accountNomeCliente').textContent = clienteData?.nome || clienteUser?.email || 'cliente';
+  }
+
+  window.criarConta = async function() {
+    const nome      = document.getElementById('signupNome').value.trim();
+    const email     = document.getElementById('signupEmail').value.trim();
+    const telefone  = document.getElementById('signupTelefone').value.trim();
+    const password  = document.getElementById('signupPassword').value;
+    if (!nome || !email || !password) { mostrarToast('⚠️ Preenche nome, email e password'); return; }
+    if (password.length < 6) { mostrarToast('⚠️ A password precisa de pelo menos 6 caracteres'); return; }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: nome });
+      await setDoc(doc(db, "clientes", cred.user.uid), {
+        nome, email, telefone, favoritos: [], criado_em: serverTimestamp(),
+      });
+      mostrarToast('✓ Conta criada com sucesso!');
+      fecharConta();
+    } catch(e) {
+      console.warn("Erro ao criar conta:", e.message);
+      mostrarToast(traduzirErroAuth(e.code));
+    }
+  }
+
+  window.entrarConta = async function() {
+    const email    = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { mostrarToast('⚠️ Preenche email e password'); return; }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      mostrarToast('✓ Sessão iniciada!');
+      fecharConta();
+    } catch(e) {
+      console.warn("Erro ao iniciar sessão:", e.message);
+      mostrarToast(traduzirErroAuth(e.code));
+    }
+  }
+
+  window.sairConta = async function() {
+    await signOut(auth);
+    mostrarToast('Sessão terminada');
+    fecharConta();
+  }
+
+  window.recuperarPassword = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) { mostrarToast('⚠️ Escreve o teu email no campo acima primeiro'); return; }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      mostrarToast('✓ Email de recuperação enviado');
+    } catch(e) {
+      console.warn("Erro ao recuperar password:", e.message);
+      mostrarToast(traduzirErroAuth(e.code));
+    }
+  }
+
+  // ─── FAVORITOS ──────────────────────────────
+  window.toggleFavorito = async function(id) {
+    if (!id) return;
+    if (!clienteUser) {
+      mostrarToast('⚠️ Inicia sessão para guardar favoritos');
+      mostrarTabConta('login');
+      abrirConta();
+      return;
+    }
+    const favoritosActuais = clienteData?.favoritos || [];
+    const jaEFavorito = favoritosActuais.includes(id);
+    try {
+      // setDoc + merge em vez de updateDoc: assim funciona mesmo que o documento
+      // do cliente ainda não exista (ex: contas criadas antes das regras do Firestore
+      // permitirem a escrita em /clientes/) — cria-o automaticamente se faltar.
+      await setDoc(doc(db, "clientes", clienteUser.uid), {
+        favoritos: jaEFavorito ? arrayRemove(id) : arrayUnion(id),
+      }, { merge: true });
+      clienteData.favoritos = jaEFavorito
+        ? favoritosActuais.filter(f => f !== id)
+        : [...favoritosActuais, id];
+      if (todosOsProdutos.length) renderProdutos();
+      atualizarFavBtnModal();
+      if (document.getElementById('meusFavoritosView').style.display === 'block') renderFavoritos();
+      mostrarToast(jaEFavorito ? 'Removido dos favoritos' : '♥ Adicionado aos favoritos');
+    } catch(e) {
+      console.warn("Erro ao actualizar favorito:", e.message);
+      mostrarToast('⚠️ Erro ao guardar favorito');
+    }
+  }
+
+  function renderFavoritos() {
+    const el  = document.getElementById('listaFavoritos');
+    const ids = clienteData?.favoritos || [];
+    const favs = todosOsProdutos.filter(p => ids.includes(p.id));
+    if (!favs.length) {
+      el.innerHTML = `<div class="cart-empty-msg"><div class="icon">♡</div><p>Ainda não tens favoritos.<br/>Toca no coração de um produto para o guardar aqui.</p></div>`;
+      return;
+    }
+    el.innerHTML = favs.map(p => `
+      <div class="fav-card">
+        <div class="fav-img" onclick="fecharConta(); abrirModal('${p.id}')">
+          ${p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}"/>` : '🧴'}
+        </div>
+        <div class="fav-info">
+          <p class="fav-nome">${p.nome}</p>
+          <p class="fav-preco">${formatarPreco(p.preco)} Kz</p>
+        </div>
+        <button class="ci-remove" onclick="toggleFavorito('${p.id}')" title="Remover">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // ─── HISTÓRICO DE ENCOMENDAS DO CLIENTE ────
+  async function carregarMinhasEncomendas() {
+    const el = document.getElementById('listaMinhasEncomendas');
+    if (!clienteUser) return;
+    el.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--gray);font-size:0.85rem;">A carregar...</div>`;
+    try {
+      const snap = await getDocs(query(collection(db, "encomendas"), where("clienteUid", "==", clienteUser.uid)));
+      let pedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      pedidos.sort((a, b) => (b.criado_em?.toMillis?.() || 0) - (a.criado_em?.toMillis?.() || 0));
+      if (!pedidos.length) {
+        el.innerHTML = `<div class="cart-empty-msg"><div class="icon">📦</div><p>Ainda não tens encomendas.<br/>Os teus pedidos vão aparecer aqui.</p></div>`;
+        return;
+      }
+      const badgeStyle = {
+        pendente:   'background:#fef3c7;color:#92400e',
+        confirmado: 'background:#dcfce7;color:#166534',
+        enviado:    'background:#dbeafe;color:#1e40af',
+        entregue:   'background:#dcfce7;color:#166534',
+        cancelado:  'background:#fee2e2;color:#991b1b',
+      };
+      el.innerHTML = pedidos.map(p => {
+        const data   = p.criado_em?.toDate?.() ? p.criado_em.toDate().toLocaleDateString('pt-AO') : '—';
+        const estado = p.estado || 'pendente';
+        const itensTxt = (p.itens || []).map(i => `${i.qty}x ${i.nome}`).join(', ');
+        return `
+          <div class="order-card">
+            <div class="order-card-top">
+              <span class="order-data">${data}</span>
+              <span class="order-badge" style="${badgeStyle[estado] || badgeStyle.pendente}">${estado.charAt(0).toUpperCase() + estado.slice(1)}</span>
+            </div>
+            <p class="order-itens">${itensTxt}</p>
+            <p class="order-total">${formatarPreco(p.total)} Kz</p>
+          </div>`;
+      }).join('');
+    } catch(e) {
+      console.warn("Erro ao carregar encomendas do cliente:", e.message);
+      el.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>Não foi possível carregar as encomendas.</p></div>`;
+    }
+  }
+
+  // ─── ESTADO DE AUTENTICAÇÃO ─────────────────
+  onAuthStateChanged(auth, async (user) => {
+    clienteUser = user;
+    const btn = document.getElementById('accountBtn');
+    if (user) {
+      try {
+        const ref = doc(db, "clientes", user.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          clienteData = snap.data();
+        } else {
+          // Conta sem documento em "clientes" (ex: criada antes das regras
+          // permitirem esta escrita) — cria-o agora para "curar" a conta.
+          clienteData = { nome: user.displayName || '', email: user.email, telefone: '', favoritos: [] };
+          await setDoc(ref, { ...clienteData, criado_em: serverTimestamp() });
+        }
+      } catch(e) {
+        console.warn("Erro ao carregar dados do cliente:", e.message);
+        clienteData = { nome: user.displayName || '', email: user.email, telefone: '', favoritos: [] };
+      }
+      btn.innerHTML = `👤 ${(clienteData.nome || 'Conta').split(' ')[0]}`;
+      mostrarVistaLogado();
+      carregarMinhasEncomendas();
+    } else {
+      clienteData = null;
+      btn.innerHTML = `👤 Conta`;
+      mostrarVistaLogin();
+    }
+    if (todosOsProdutos.length) renderProdutos();
+    atualizarFavBtnModal();
+  });
 
   // ─── DADOS ────────────────────────────────
   let todosOsProdutos = [];
@@ -951,10 +1433,12 @@
       const temStock = p.quantidade !== undefined;
       const esgotado = temStock && Number(p.quantidade) <= 0;
       const stockBaixo = temStock && !esgotado && Number(p.quantidade) <= 3;
+      const isFav = (clienteData?.favoritos || []).includes(p.id);
       return `
       <div class="card" data-aos="fade-up" onclick="abrirModal('${p.id}')">
         <div class="card-img${!p.imagem_url ? ' no-img' : ''}">
           ${imgHtml}
+          <button class="card-fav-btn${isFav ? ' active' : ''}" onclick="event.stopPropagation(); toggleFavorito('${p.id}')" title="Favorito">${isFav ? '♥' : '♡'}</button>
           <span class="card-badge ${badgeClass}">${badgeLabel}</span>
           ${p.destaque ? `<span class="card-destaque">★ Destaque</span>` : ''}
           ${esgotado ? `<div class="card-esgotado-overlay">Esgotado</div>` : ''}
@@ -983,22 +1467,23 @@
 
   function formatarPreco(n) { return Number(n).toLocaleString('pt-AO'); }
 
-  window.adicionarAoCarrinho = function(id, qty = 1) {
+  window.adicionarAoCarrinho = function(id, quantidade = 1) {
     const prod = todosOsProdutos.find(p => p.id === id);
-    if (!prod) return;
-    qty = Math.max(1, parseInt(qty, 10) || 1);
+    if (!prod) return false;
+    const qtd = Math.max(1, Number(quantidade) || 1);
     const idx = carrinho.findIndex(c => c.id === id);
     const qtyActual = idx >= 0 ? carrinho[idx].qty : 0;
-    if (prod.quantidade !== undefined && qtyActual + qty > Number(prod.quantidade)) {
+    if (prod.quantidade !== undefined && qtyActual + qtd > Number(prod.quantidade)) {
       mostrarToast('⚠️ Apenas ' + prod.quantidade + ' em stock');
-      return;
+      return false;
     }
-    if (idx >= 0) carrinho[idx].qty += qty;
-    else carrinho.push({ id, nome: prod.nome, preco: prod.preco, imagem_url: prod.imagem_url || '', qty });
+    if (idx >= 0) carrinho[idx].qty += qtd;
+    else carrinho.push({ id, nome: prod.nome, preco: prod.preco, tipo: prod.tipo || '', categoria: prod.categoria || '', imagem_url: prod.imagem_url || '', qty: qtd });
     salvarCarrinho(); actualizarUI();
     const btn = document.getElementById('btn-' + id);
     if (btn) { btn.classList.add('added'); btn.textContent = '✓ Adicionado'; setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Adicionar'; }, 1400); }
-    mostrarToast('✓ ' + qty + 'x ' + prod.nome + ' adicionado');
+    mostrarToast('✓ ' + prod.nome + (qtd > 1 ? ' (' + qtd + ' un.)' : '') + ' adicionado');
+    return true;
   }
 
   function actualizarUI() {
@@ -1063,6 +1548,12 @@
     document.getElementById('cartOverlay').classList.add('open');
     document.getElementById('cartDrawer').classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (clienteData) {
+      const nomeEl = document.getElementById('clienteNome');
+      const telEl  = document.getElementById('clienteTel');
+      if (nomeEl && !nomeEl.value) nomeEl.value = clienteData.nome || '';
+      if (telEl  && !telEl.value)  telEl.value  = clienteData.telefone || '';
+    }
     renderCarrinho();
   }
   window.fecharCarrinho = function() {
@@ -1077,7 +1568,7 @@
   }
 
   // ─── WHATSAPP ─────────────────────────────
-  window.enviarWhatsApp = function() {
+  window.enviarWhatsApp = async function() {
     const nome = document.getElementById('clienteNome').value.trim();
     const tel  = document.getElementById('clienteTel').value.trim();
     const morada = document.getElementById('clienteMorada').value.trim();
@@ -1107,193 +1598,181 @@
       pagamento === 'multicaixa' ? `_Por favor enviem os dados da Multicaixa Express para concluir o pagamento._` : '',
     ].filter(l => l !== '').join('\n');
 
+    // Guarda a encomenda no Firestore para aparecer no painel admin (Encomendas + Dashboard)
+    const btn = document.querySelector('.btn-whatsapp');
+    if (btn) { btn.disabled = true; btn.textContent = 'A enviar...'; }
+    try {
+      await addDoc(collection(db, "encomendas"), {
+        cliente: { nome, telefone: tel, morada },
+        clienteUid: clienteUser ? clienteUser.uid : null,
+        clienteEmail: clienteUser ? clienteUser.email : null,
+        itens: carrinho.map(c => ({
+          id: c.id, nome: c.nome, preco: c.preco, qty: c.qty,
+          tipo: c.tipo || '', categoria: c.categoria || '', imagem_url: c.imagem_url || '',
+        })),
+        total: totalVal,
+        pagamento,
+        observacoes: obs,
+        estado: 'pendente',
+        criado_em: serverTimestamp(),
+      });
+    } catch(e) {
+      console.warn("Erro ao guardar encomenda no Firestore:", e.message);
+      // Não bloqueia o cliente — a encomenda continua a seguir por WhatsApp mesmo assim.
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Encomendar via WhatsApp'; }
+
+    carrinho = [];
+    salvarCarrinho();
+    actualizarUI();
+    fecharCarrinho();
+
     window.open(`https://wa.me/${window.WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
   // ─── MODAL PRODUTO ────────────────────────
   let produtoActivo = null;
-  let imagensModal = [];
+  let modalQtyActual = 1;
+  let modalImagemActual = 0;
 
-  function imagensDoProduto(p) {
-    const lista = Array.isArray(p.imagens) ? p.imagens : [];
-    return [...new Set([p.imagem_url, ...lista].filter(Boolean))];
+  function categoriaLabel(v) {
+    const labels = { feminino: 'Feminino', masculino: 'Masculino', unissexo: 'Unissexo' };
+    return labels[v] || 'Produto';
   }
 
-  function renderImagemModal(src) {
+  function imagensProduto(p) {
+    const lista = Array.isArray(p.imagens) ? p.imagens : (Array.isArray(p.imagens_url) ? p.imagens_url : []);
+    return [p.imagem_url, ...lista].filter(Boolean).filter((url, i, arr) => arr.indexOf(url) === i);
+  }
+
+  function renderImagemModal(index = 0) {
+    if (!produtoActivo) return;
+    const imagens = imagensProduto(produtoActivo);
+    modalImagemActual = Math.max(0, Math.min(index, imagens.length - 1));
     const imgEl = document.getElementById('modalImg');
-    imgEl.innerHTML = src ? `<img src="${src}" alt="${produtoActivo?.nome || 'Produto'}"/>` : '🧴';
-    document.querySelectorAll('.modal-thumb').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.src === src);
-    });
-  }
-  window.renderImagemModal = renderImagemModal;
+    imgEl.innerHTML = imagens.length
+      ? `<img src="${imagens[modalImagemActual]}" alt="${produtoActivo.nome}"/>`
+      : '🧴';
 
-  function renderThumbsModal() {
-    const thumbs = document.getElementById('modalThumbs');
-    if (imagensModal.length <= 1) {
-      thumbs.innerHTML = '';
-      return;
-    }
-    thumbs.innerHTML = imagensModal.map((src, i) => `
-      <button class="modal-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" onclick="renderImagemModal('${src.replace(/'/g, "\\'")}')">
-        <img src="${src}" alt="${produtoActivo.nome} ${i + 1}"/>
+    const thumbsEl = document.getElementById('modalThumbs');
+    thumbsEl.innerHTML = imagens.length > 1 ? imagens.map((url, i) => `
+      <button class="modal-thumb${i === modalImagemActual ? ' active' : ''}" type="button" onclick="selecionarImagemModal(${i})">
+        <img src="${url}" alt="${produtoActivo.nome} ${i + 1}"/>
       </button>
-    `).join('');
+    `).join('') : '';
   }
 
-  function stockInfo(p) {
-    const temStock = p.quantidade !== undefined;
-    const qtd = Number(p.quantidade ?? 0);
-    if (!temStock) return { texto: 'Disponível', classe: 'modal-stock-ok', max: 99, esgotado: false };
-    if (qtd <= 0) return { texto: 'Esgotado', classe: 'modal-stock-out', max: 0, esgotado: true };
-    if (qtd <= 3) return { texto: `Últimas ${qtd} unidades`, classe: 'modal-stock-low', max: qtd, esgotado: false };
-    return { texto: `${qtd} unidades em stock`, classe: 'modal-stock-ok', max: qtd, esgotado: false };
+  window.selecionarImagemModal = function(index) {
+    renderImagemModal(index);
   }
 
-  function renderMetaModal(p, stock) {
-    const categoriaLabel = p.categoria === 'feminino' ? 'Feminino' : p.categoria === 'masculino' ? 'Masculino' : 'Unissexo';
-    document.getElementById('modalMeta').innerHTML = `
-      <span class="modal-chip">${categoriaLabel}</span>
-      <span class="modal-chip">${tipoLabel(p.tipo)}</span>
-      <span class="modal-chip ${stock.classe}">${stock.texto}</span>
-      ${p.destaque ? '<span class="modal-chip">Destaque</span>' : ''}
-    `;
+  function maxQtyModal() {
+    if (!produtoActivo || produtoActivo.quantidade === undefined) return 99;
+    return Math.max(0, Number(produtoActivo.quantidade) || 0);
   }
 
-  function renderRelacionados(p) {
-    const relacionados = todosOsProdutos
-      .filter(x => x.id !== p.id && x.disponivel !== false && x.categoria === p.categoria)
-      .sort((a, b) => Number(b.destaque === true) - Number(a.destaque === true))
-      .slice(0, 4);
-    const section = document.getElementById('modalRelatedSection');
-    const grid = document.getElementById('modalRelated');
-    if (!relacionados.length) {
-      section.style.display = 'none';
-      grid.innerHTML = '';
-      return;
-    }
-    section.style.display = 'block';
-    grid.innerHTML = relacionados.map(r => `
-      <div class="related-card" onclick="abrirModal('${r.id}')">
-        <div class="related-img">${r.imagem_url ? `<img src="${r.imagem_url}" alt="${r.nome}"/>` : '🧴'}</div>
-        <div class="related-body">
-          <p class="related-name">${r.nome}</p>
-          <p class="related-price">${formatarPreco(r.preco)} Kz</p>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function renderComboModal(p) {
-    const ids = Array.isArray(p.combo_ids) ? p.combo_ids : [];
-    const produtosCombo = ids.map(id => todosOsProdutos.find(x => x.id === id)).filter(Boolean);
-    const section = document.getElementById('modalComboSection');
-    const box = document.getElementById('modalCombo');
-    if (!produtosCombo.length && !p.combo_preco) {
-      section.style.display = 'none';
-      box.innerHTML = '';
-      return;
-    }
-    const nomes = produtosCombo.length ? produtosCombo.map(x => x.nome).join(' + ') : 'Pack especial';
-    const preco = p.combo_preco ? `${formatarPreco(p.combo_preco)} Kz` : 'Preço especial';
-    section.style.display = 'block';
-    box.innerHTML = `
-      <div class="combo-box">
-        <p><strong>${p.combo_nome || 'Compra em conjunto'}</strong>${p.nome}${produtosCombo.length ? ' + ' + nomes : ''}<br/>${preco}</p>
-        <button onclick="adicionarComboAoCarrinho('${p.id}')">Adicionar combo</button>
-      </div>
-    `;
+  function actualizarQtyModalUI() {
+    const input = document.getElementById('modalQty');
+    const minus = document.getElementById('modalQtyMinus');
+    const plus = document.getElementById('modalQtyPlus');
+    const max = maxQtyModal();
+    const esgotado = max === 0;
+    modalQtyActual = esgotado ? 0 : Math.max(1, Math.min(Number(modalQtyActual) || 1, max));
+    input.value = esgotado ? 0 : modalQtyActual;
+    input.min = esgotado ? 0 : 1;
+    input.max = max;
+    input.disabled = esgotado;
+    minus.disabled = esgotado || modalQtyActual <= 1;
+    plus.disabled = esgotado || modalQtyActual >= max;
   }
 
   window.abrirModal = function(id) {
     const p = todosOsProdutos.find(x => x.id === id);
     if (!p) return;
     produtoActivo = p;
-    const stock = stockInfo(p);
-    imagensModal = imagensDoProduto(p);
+    modalQtyActual = 1;
+    modalImagemActual = 0;
 
-    document.getElementById('modalTipo').textContent = tipoLabel(p.tipo);
+    const stock = p.quantidade !== undefined ? Number(p.quantidade) : null;
+    const esgotado = stock !== null && stock <= 0;
+    document.getElementById('modalTipo').textContent = `${categoriaLabel(p.categoria)} / ${tipoLabel(p.tipo)}`;
     document.getElementById('modalNome').textContent = p.nome;
+    document.getElementById('modalDesc').textContent = p.descricao || '';
     document.getElementById('modalPreco').textContent = formatarPreco(p.preco) + ' Kz';
-    document.getElementById('modalDesc').textContent = p.descricao || 'Sem descrição disponível.';
-    renderMetaModal(p, stock);
-    renderImagemModal(imagensModal[0] || '');
-    renderThumbsModal();
 
-    const qtyInput = document.getElementById('modalQty');
-    qtyInput.value = stock.esgotado ? 0 : 1;
-    qtyInput.min = stock.esgotado ? 0 : 1;
-    qtyInput.max = stock.max;
-    qtyInput.disabled = stock.esgotado;
+    const stockEl = document.getElementById('modalStock');
+    stockEl.textContent = esgotado ? 'Esgotado' : (stock !== null ? `Stock: ${stock} unidades` : 'Stock disponível');
+    stockEl.classList.toggle('esgotado', esgotado);
 
-    const addBtn = document.getElementById('modalAddBtn');
-    addBtn.disabled = stock.esgotado;
-    addBtn.textContent = stock.esgotado ? 'Esgotado' : 'Adicionar ao carrinho';
-    addBtn.onclick = stock.esgotado ? null : () => {
-      adicionarAoCarrinho(id, document.getElementById('modalQty').value);
-      fecharModalBtn();
-    };
+    renderImagemModal(0);
+    actualizarQtyModalUI();
+    carregarRelacionados(p.categoria, p.id);
 
-    renderComboModal(p);
-    renderRelacionados(p);
+    document.getElementById('modalAddBtn').disabled = esgotado;
+    document.getElementById('modalBuyBtn').disabled = esgotado;
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
   window.alterarQtyModal = function(delta) {
     const input = document.getElementById('modalQty');
-    const min = Number(input.min || 1);
-    const max = Number(input.max || 99);
-    const actual = parseInt(input.value, 10) || min;
-    input.value = Math.min(max, Math.max(min, actual + delta));
+    const valorDigitado = Number(input.value) || 1;
+    modalQtyActual = delta === 0 ? valorDigitado : modalQtyActual + delta;
+    actualizarQtyModalUI();
   }
 
-  window.validarQtyModal = function() {
-    const input = document.getElementById('modalQty');
-    const min = Number(input.min || 1);
-    const max = Number(input.max || 99);
-    const actual = parseInt(input.value, 10) || min;
-    input.value = Math.min(max, Math.max(min, actual));
+  window.adicionarDoModal = function() {
+    if (!produtoActivo || maxQtyModal() === 0) return;
+    if (adicionarAoCarrinho(produtoActivo.id, modalQtyActual)) fecharModal();
   }
 
-  window.adicionarComboAoCarrinho = function(id) {
-    const p = todosOsProdutos.find(x => x.id === id);
-    if (!p) return;
-    const produtosCombo = (Array.isArray(p.combo_ids) ? p.combo_ids : [])
-      .map(pid => todosOsProdutos.find(x => x.id === pid))
-      .filter(Boolean);
+  window.comprarAgoraModal = function() {
+    if (!produtoActivo || maxQtyModal() === 0) return;
+    const total = Number(produtoActivo.preco) * modalQtyActual;
+    const msg = [
+      'Olá Grande Seba! Gostaria de comprar este produto:',
+      '',
+      `*Produto:* ${produtoActivo.nome}`,
+      `*Quantidade:* ${modalQtyActual}`,
+      `*Preço:* ${formatarPreco(produtoActivo.preco)} Kz`,
+      `*Total:* ${formatarPreco(total)} Kz`
+    ].join('\n');
+    window.open(`https://wa.me/${window.WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    fecharModal();
+  }
 
-    if (p.combo_preco) {
-      const comboId = `combo-${p.id}`;
-      const idx = carrinho.findIndex(c => c.id === comboId);
-      const nomes = [p.nome, ...produtosCombo.map(x => x.nome)].join(' + ');
-      if (idx >= 0) carrinho[idx].qty++;
-      else {
-        carrinho.push({
-          id: comboId,
-          nome: p.combo_nome || `Combo: ${nomes}`,
-          preco: Number(p.combo_preco),
-          imagem_url: p.imagem_url || produtosCombo[0]?.imagem_url || '',
-          qty: 1
-        });
-      }
-      salvarCarrinho();
-      actualizarUI();
-      mostrarToast('✓ Combo adicionado');
-    } else {
-      adicionarAoCarrinho(id, 1);
-      produtosCombo.forEach(item => adicionarAoCarrinho(item.id, 1));
+  window.carregarRelacionados = function(categoria, idAtual) {
+    const el = document.getElementById('modalRelacionados');
+    const relacionados = todosOsProdutos
+      .filter(p => p.categoria === categoria && p.id !== idAtual)
+      .slice(0, 12);
+
+    if (!relacionados.length) {
+      el.innerHTML = `<p class="related-empty">Sem produtos relacionados nesta categoria.</p>`;
+      return;
     }
-    fecharModalBtn();
+
+    el.innerHTML = relacionados.map(p => `
+      <article class="related-card" onclick="abrirModal('${p.id}')">
+        <div class="related-img">
+          ${p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" loading="lazy"/>` : '🧴'}
+        </div>
+        <div class="related-info">
+          <p class="related-name">${p.nome}</p>
+          <p class="related-price">${formatarPreco(p.preco)} Kz</p>
+        </div>
+      </article>
+    `).join('');
   }
+
+  function atualizarFavBtnModal() {}
 
   window.fecharModal = function(e) {
-    if (e.target === document.getElementById('modalOverlay')) fecharModalBtn();
-  }
-  window.fecharModalBtn = function() {
+    if (e && e.target !== document.getElementById('modalOverlay')) return;
     document.getElementById('modalOverlay').classList.remove('open');
     document.body.style.overflow = '';
   }
+  window.fecharModalBtn = window.fecharModal;
 
   // ─── TOAST ────────────────────────────────
   let toastTimer;

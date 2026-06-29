@@ -25,7 +25,6 @@
       background: var(--coal); border-radius: 12px; padding: 2.5rem;
       width: 340px; text-align: center;
     }
-    .login-logo { width: 82px; height: 82px; object-fit: contain; margin: 0 auto 1rem; display: block; border-radius: 12px; }
     .login-box h1 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.4rem; margin-bottom: 0.3rem; }
     .login-box p { color: var(--gray); font-size: 0.82rem; margin-bottom: 2rem; }
     .login-box input {
@@ -51,11 +50,8 @@
       display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 100;
     }
-    .admin-header .brand { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
-    .brand-logo { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; background: var(--white); padding: 2px; }
-    .brand-text { display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
-    .brand-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--white); }
-    .brand-subtitle { font-size: 0.7rem; color: var(--gray); font-weight: 300; margin-top: 0.16rem; }
+    .admin-header .brand { font-family: 'Playfair Display', serif; font-size: 1rem; }
+    .admin-header .brand span { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--gray); margin-left: 0.5rem; font-weight: 300; }
     .btn-logout {
       background: none; border: 1px solid #444; color: var(--gray);
       padding: 0.3rem 0.8rem; border-radius: 4px; cursor: pointer;
@@ -88,29 +84,12 @@
       display: grid; grid-template-columns: repeat(5, 1fr);
       gap: 1rem; margin-bottom: 2rem;
     }
-    .dashboard-stats { grid-template-columns: repeat(4, 1fr); }
     .stat-card { background: var(--white); border-radius: 8px; padding: 1.1rem 1.25rem; border: 1px solid var(--border); }
     .stat-label { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.35rem; }
     .stat-val { font-size: 1.6rem; font-weight: 600; }
     .stat-val.fem { color: var(--fem); }
     .stat-val.masc { color: var(--masc); }
     .stat-val.green { color: var(--green); }
-
-    .chart-card {
-      background: var(--white); border-radius: 10px; padding: 1.5rem;
-      border: 1px solid var(--border);
-    }
-    .chart-title {
-      font-family: 'Playfair Display', serif; margin-bottom: 1rem;
-      font-size: 1.1rem; color: var(--black);
-    }
-    .chart-frame {
-      position: relative; width: 100%; height: 280px; max-height: 280px;
-      overflow: hidden;
-    }
-    .chart-frame canvas {
-      display: block; width: 100% !important; height: 100% !important;
-    }
 
     /* ── TOOLBAR ── */
     .toolbar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
@@ -242,44 +221,22 @@
     .toast.show { opacity: 1; transform: translateY(0); }
     .empty-row td { text-align: center; padding: 3rem; color: var(--gray); }
 
+    .dash-charts-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
+
     @media (max-width: 700px) {
-      .admin-header { height: auto; padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.75rem; }
-      .admin-header > div:last-child { width: 100%; flex-wrap: wrap; gap: 0.5rem !important; }
-      .nav-btn { padding: 0.4rem 0.65rem; }
       .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
-      .chart-frame { height: 240px; max-height: 240px; }
       .form-row { grid-template-columns: 1fr; }
+      .dash-charts-grid { grid-template-columns: 1fr; }
       table thead { display: none; }
       table td { display: block; }
     }
   </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
-  <symbol id="i-package" viewBox="0 0 24 24"><path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="m3 8 9 5 9-5"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></symbol>
-  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h8.72a2 2 0 0 0 2-1.61L21 7H5.12"/></symbol>
-  <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1.5a1.5 1.5 0 0 1 0 3H7V5"/><path d="M7 12h3"/></symbol>
-  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M5 4H3v2a4 4 0 0 0 4 4"/><path d="M19 4h2v2a4 4 0 0 1-4 4"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
-  <symbol id="i-trending" viewBox="0 0 24 24"><path d="M3 17 9 11l4 4 8-8"/><path d="M14 7h7v7"/></symbol>
-  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
-  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
-  <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
-  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
-  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.67 6.26.91-4.53 4.41 1.07 6.23L12 17.27l-5.6 2.95 1.07-6.23-4.53-4.41 6.26-.91L12 3Z"/></symbol>
-  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></symbol>
-</svg>
 
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <img class="login-logo" src="logo.png" alt="Grande Seba"/>
     <h1>Grande Seba</h1>
     <p>Painel de administração</p>
     <input type="password" id="loginPass" placeholder="Palavra-passe"
@@ -293,17 +250,12 @@
 <!-- ADMIN APP -->
 <div id="adminApp">
   <header class="admin-header">
-    <div class="brand">
-      <img class="brand-logo" src="logo.png" alt="Grande Seba"/>
-      <div class="brand-text">
-        <span class="brand-title">Grande Seba</span>
-        <span class="brand-subtitle">Painel Admin</span>
-      </div>
-    </div>
+    <div class="brand">Grande Seba <span>Painel Admin</span></div>
     <div style="display:flex; gap:1rem; align-items:center;">
-      <button class="nav-btn" data-section="dashboard" onclick="mudarSecao('dashboard')"><svg class="icon icon-sm"><use href="#i-dashboard"></use></svg> Dashboard</button>
-      <button class="nav-btn active" data-section="produtos" onclick="mudarSecao('produtos')"><svg class="icon icon-sm"><use href="#i-package"></use></svg> Produtos</button>
-      <button class="nav-btn" data-section="encomendas" onclick="mudarSecao('encomendas')"><svg class="icon icon-sm"><use href="#i-cart"></use></svg> Encomendas</button>
+      <button class="nav-btn" data-section="dashboard" onclick="mudarSecao('dashboard')">📊 Dashboard</button>
+      <button class="nav-btn active" data-section="produtos" onclick="mudarSecao('produtos')">📦 Produtos</button>
+      <button class="nav-btn" data-section="encomendas" onclick="mudarSecao('encomendas')">🛒 Encomendas</button>
+      <button class="nav-btn" data-section="clientes" onclick="mudarSecao('clientes')">👥 Clientes</button>
       <button class="btn-logout" onclick="sair()">Sair</button>
     </div>
   </header>
@@ -313,34 +265,44 @@
 <div id="sectionDashboard" style="display:none;">
 
   <!-- Cards rápidos -->
-  <div class="stats-row dashboard-stats" style="margin-bottom:1.5rem;">
+  <div class="stats-row" style="margin-bottom:1.5rem;">
     <div class="stat-card">
-      <div class="stat-label"><svg class="icon icon-sm"><use href="#i-package"></use></svg> Total Encomendas</div>
+      <div class="stat-label">📦 Total Encomendas</div>
       <div class="stat-val" id="dashTotalPedidos">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label"><svg class="icon icon-sm"><use href="#i-coins"></use></svg> Vendas (últ. 30 dias)</div>
-      <div class="stat-val green" id="dashTotalVendas">—</div>
+      <div class="stat-label">💰 Vendas (últ. 30 dias)</div>
+      <div class="stat-val green" id="dashTotalVendas" style="font-size:1.2rem;">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label"><svg class="icon icon-sm"><use href="#i-trophy"></use></svg> Produto + Vendido</div>
+      <div class="stat-label">🏆 Produto + Vendido</div>
       <div class="stat-val" id="dashProdutoTop" style="font-size:1.2rem;">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label"><svg class="icon icon-sm"><use href="#i-clock"></use></svg> Pendentes</div>
+      <div class="stat-label">⏳ Pendentes</div>
       <div class="stat-val" id="dashPendentes" style="color:#f59e0b;">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">🏷️ Valor Total do Stock</div>
+      <div class="stat-val" id="dashValorStock" style="font-size:1.2rem;">—</div>
     </div>
   </div>
 
-  <!-- Gráfico -->
-  <div class="chart-card">
-    <h3 class="chart-title with-icon"><svg class="icon icon-md"><use href="#i-trending"></use></svg> Encomendas por dia (últimos 7 dias)</h3>
-    <div class="chart-frame">
-      <canvas id="graficoEncomendas"></canvas>
+  <!-- Gráficos -->
+  <div class="dash-charts-grid">
+    <div style="background:white; border-radius:10px; padding:1.5rem; border:1px solid var(--border);">
+      <h3 style="font-family:'Playfair Display',serif; margin-bottom:1rem;">📈 Encomendas por dia (últimos 7 dias)</h3>
+      <canvas id="graficoEncomendas" height="180"></canvas>
+    </div>
+    <div style="background:white; border-radius:10px; padding:1.5rem; border:1px solid var(--border);">
+      <h3 style="font-family:'Playfair Display',serif; margin-bottom:1rem;">🧴 Vendas por Categoria de Produto</h3>
+      <canvas id="graficoCategorias" height="180"></canvas>
+      <p id="graficoCategoriasVazio" style="display:none; text-align:center; color:var(--gray); font-size:0.85rem; padding:2rem 0;">Ainda não há vendas registadas.</p>
     </div>
   </div>
 
 </div>
+
 
     <!-- SECÇÃO PRODUTOS -->
     <div id="sectionProdutos">
@@ -350,13 +312,13 @@
         <div class="stat-card"><div class="stat-label">Feminino</div><div class="stat-val fem" id="statFem">—</div></div>
         <div class="stat-card"><div class="stat-label">Masculino</div><div class="stat-val masc" id="statMasc">—</div></div>
         <div class="stat-card"><div class="stat-label">Activos</div><div class="stat-val green" id="statActivos">—</div></div>
-        <div class="stat-card"><div class="stat-label"><svg class="icon icon-sm"><use href="#i-alert"></use></svg> Stock Baixo</div><div class="stat-val" id="statStockBaixo" style="color:#f59e0b;">0</div></div>
+        <div class="stat-card"><div class="stat-label">⚠️ Stock Baixo</div><div class="stat-val" id="statStockBaixo" style="color:#f59e0b;">0</div></div>
       </div>
 
       <!-- ALERTA STOCK BAIXO -->
       <div id="stockAlert" style="display:none; margin-bottom:1.5rem; padding:1rem; background:#fffbeb; border-left:4px solid #f59e0b; border-radius:6px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-          <strong class="with-icon" style="color:#92400e;"><svg class="icon icon-sm"><use href="#i-alert"></use></svg> Produtos com stock baixo (≤ 3 unidades)</strong>
+          <strong style="color:#92400e;">⚠️ Produtos com stock baixo (≤ 3 unidades)</strong>
           <span id="stockAlertCount" style="background:#f59e0b; color:white; padding:0.2rem 0.8rem; border-radius:100px; font-size:0.75rem; font-weight:600;">0</span>
         </div>
         <div id="stockList" style="margin-top:0.75rem; display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
@@ -364,7 +326,7 @@
 
       <!-- TOOLBAR PRODUTOS -->
       <div class="toolbar">
-        <button class="btn-primary" onclick="abrirForm()"><svg class="icon icon-sm"><use href="#i-plus"></use></svg> Novo Produto</button>
+        <button class="btn-primary" onclick="abrirForm()">+ Novo Produto</button>
         <input class="toolbar-search" id="filtroTextoInput" type="text" placeholder="Pesquisar produto..."
           oninput="filtrarTabela()"/>
         <select class="toolbar-select" id="filtroCatSelect" onchange="filtrarTabela()">
@@ -376,7 +338,7 @@
         <select class="toolbar-select" id="filtroTipoSelect" onchange="filtrarTabela()">
           <option value="">Todos os tipos</option>
         </select>
-        <a class="with-icon" href="index.html" target="_blank" style="margin-left:auto; font-size:0.8rem; color:var(--gray); text-decoration:none;"><svg class="icon icon-sm"><use href="#i-external"></use></svg> Ver loja</a>
+        <a href="index.html" target="_blank" style="margin-left:auto; font-size:0.8rem; color:var(--gray); text-decoration:none;">↗ Ver loja</a>
       </div>
 
       <!-- TABELA PRODUTOS -->
@@ -435,6 +397,41 @@
       </div>
     </div>
 
+    <!-- SECÇÃO CLIENTES -->
+    <div id="sectionClientes" style="display:none;">
+      <div class="stats-row" style="grid-template-columns: repeat(3, 1fr); margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-label">👥 Total de Clientes</div><div class="stat-val" id="statTotalClientes">—</div></div>
+        <div class="stat-card"><div class="stat-label">✨ Novos (últ. 30 dias)</div><div class="stat-val green" id="statNovosClientes">—</div></div>
+        <div class="stat-card"><div class="stat-label">🏆 Cliente Top</div><div class="stat-val" id="statClienteTop" style="font-size:1.15rem;">—</div></div>
+      </div>
+
+      <div class="toolbar">
+        <input class="toolbar-search" type="text" placeholder="Pesquisar por nome, email ou telefone..."
+          oninput="filtrarClientes(this.value)" style="width:280px;"/>
+        <span style="font-size:0.8rem; color:var(--gray); margin-left:auto;" id="clientesTotal">0 clientes</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Registo</th>
+              <th>Favoritos</th>
+              <th>Encomendas</th>
+              <th>Total Gasto (Kz)</th>
+              <th style="width:100px">Acções</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaClientes">
+            <tr class="empty-row"><td colspan="8">A carregar clientes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div><!-- /admin-body -->
 </div><!-- /adminApp -->
 
@@ -443,7 +440,7 @@
   <div class="form-box">
     <div class="form-header">
       <h2 id="formTitle">Novo Produto</h2>
-      <button class="btn-cancel" onclick="fecharForm()" aria-label="Fechar"><svg class="icon icon-sm"><use href="#i-x"></use></svg></button>
+      <button class="btn-cancel" onclick="fecharForm()">✕</button>
     </div>
     <div class="form-body">
       <div class="field">
@@ -482,7 +479,7 @@
         <label>Imagem do produto</label>
         <div class="upload-area" id="uploadArea" onclick="document.getElementById('fImagemFile').click()">
           <div id="uploadPreview" class="upload-preview-empty">
-            <svg class="icon icon-lg upload-icon"><use href="#i-image"></use></svg>
+            <span>📷</span>
             <p>Clica para escolher uma foto</p>
             <small>JPG, PNG ou WEBP · máx. 5MB</small>
           </div>
@@ -532,9 +529,6 @@
   const CLOUDINARY_CLOUD_NAME  = "dw958rv3b";
   const CLOUDINARY_UPLOAD_PRESET = "seba-uploads";
 
-  const icon = (name, extraClass = '') =>
-    `<svg class="icon ${extraClass}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
-
   const firebaseConfig = {
     apiKey:            "AIzaSyClDRWSRKQqnuEZIqwp-xAE5_GO1Mqe9SA",
     authDomain:        "perfumaria-grande-seba.firebaseapp.com",
@@ -551,10 +545,11 @@
   // ── 3. ESTADO ─────────────────────────────────────────
   let produtos    = [];
   let encomendas  = [];
+  let clientes    = [];
+  let filtroClientes = '';
   let editandoId  = null;
   let filtroTexto = '';
   let filtroCat   = '';
-  let graficoDashboard = null;
   let filtroTipo  = '';
   let filtroEstado = '';
 
@@ -631,6 +626,7 @@
   document.getElementById('sectionProdutos').style.display   = 'none';
   document.getElementById('sectionEncomendas').style.display = 'none';
   document.getElementById('sectionDashboard').style.display  = 'none';
+  document.getElementById('sectionClientes').style.display   = 'none';
 
   if (secao === 'produtos') {
     document.getElementById('sectionProdutos').style.display = 'block';
@@ -640,102 +636,11 @@
   } else if (secao === 'dashboard') {
     document.getElementById('sectionDashboard').style.display = 'block';
     carregarDashboard();
+  } else if (secao === 'clientes') {
+    document.getElementById('sectionClientes').style.display = 'block';
+    carregarClientes();
   }
 };
-
-
-  // ── 6. DASHBOARD ──────────────────────────────────────
-  async function carregarDashboard() {
-    try {
-      const snap = await getDocs(query(collection(db, "encomendas"), orderBy("criado_em", "desc")));
-      const lista = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const agora = new Date();
-      const limite30 = new Date(agora);
-      limite30.setDate(limite30.getDate() - 30);
-
-      const encomendas30 = lista.filter(e => {
-        const data = e.criado_em?.toDate?.();
-        return data && data >= limite30;
-      });
-      const vendas30 = encomendas30
-        .filter(e => e.estado !== 'cancelado')
-        .reduce((sum, e) => sum + (Number(e.total) || 0), 0);
-      const pendentes = lista.filter(e => (e.estado || 'pendente') === 'pendente').length;
-      const contagemProdutos = {};
-
-      lista.forEach(e => {
-        (e.itens || []).forEach(item => {
-          const nome = item.nome || 'Produto';
-          contagemProdutos[nome] = (contagemProdutos[nome] || 0) + (Number(item.qty) || 0);
-        });
-      });
-
-      const produtoTop = Object.entries(contagemProdutos)
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
-
-      document.getElementById('dashTotalPedidos').textContent = lista.length;
-      document.getElementById('dashTotalVendas').textContent = `${vendas30.toLocaleString('pt-AO')} Kz`;
-      document.getElementById('dashProdutoTop').textContent = produtoTop;
-      document.getElementById('dashPendentes').textContent = pendentes;
-
-      renderGraficoDashboard(lista);
-    } catch(e) {
-      console.warn("Erro ao carregar dashboard:", e.message);
-      document.getElementById('dashTotalPedidos').textContent = '0';
-      document.getElementById('dashTotalVendas').textContent = '0 Kz';
-      document.getElementById('dashProdutoTop').textContent = '—';
-      document.getElementById('dashPendentes').textContent = '0';
-      renderGraficoDashboard([]);
-    }
-  }
-
-  function renderGraficoDashboard(lista) {
-    const canvas = document.getElementById('graficoEncomendas');
-    if (!canvas || typeof Chart === 'undefined') return;
-
-    const dias = Array.from({ length: 7 }, (_, i) => {
-      const data = new Date();
-      data.setDate(data.getDate() - (6 - i));
-      data.setHours(0, 0, 0, 0);
-      return data;
-    });
-
-    const labels = dias.map(d => d.toLocaleDateString('pt-AO', { day: '2-digit', month: '2-digit' }));
-    const valores = dias.map(dia => {
-      const fim = new Date(dia);
-      fim.setDate(fim.getDate() + 1);
-      return lista.filter(e => {
-        const data = e.criado_em?.toDate?.();
-        return data && data >= dia && data < fim;
-      }).length;
-    });
-
-    if (graficoDashboard) graficoDashboard.destroy();
-    graficoDashboard = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Encomendas',
-          data: valores,
-          borderColor: '#0A0A0A',
-          backgroundColor: 'rgba(10,10,10,0.08)',
-          tension: 0.35,
-          fill: true,
-          pointRadius: 3,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, ticks: { precision: 0 } },
-          x: { grid: { display: false } }
-        }
-      }
-    });
-  }
 
 
   // ── 6. PRODUTOS — CARREGAR ────────────────────────────
@@ -787,7 +692,7 @@
         <span style="display:inline-flex;align-items:center;gap:0.4rem;background:#fff;padding:0.2rem 0.6rem 0.2rem 0.4rem;border-radius:100px;border:1px solid #fcd34d;font-size:0.78rem;">
           <span>${p.nome}</span>
           <span style="background:#f59e0b;color:white;padding:0 0.4rem;border-radius:100px;font-size:0.65rem;font-weight:600;">${label}</span>
-          <button class="btn-icon edit" onclick="abrirForm('${p.id}')" style="padding:0.1rem 0.4rem;font-size:0.65rem;border-color:#fcd34d;" aria-label="Editar">${icon('edit', 'icon-sm')}</button>
+          <button class="btn-icon edit" onclick="abrirForm('${p.id}')" style="padding:0.1rem 0.4rem;font-size:0.65rem;border-color:#fcd34d;">✏️</button>
         </span>`;
     }).join('');
   }
@@ -816,7 +721,7 @@
       const bl = { feminino:'Feminino',  masculino:'Masculino',  unissexo:'Unissexo'  }[p.categoria] || p.categoria;
       const imgHtml = p.imagem_url
         ? `<div class="img-thumb"><img src="${p.imagem_url}" alt=""/></div>`
-        : `<div class="img-thumb">${icon('image', 'icon-md')}</div>`;
+        : `<div class="img-thumb">🧴</div>`;
       const qtd = Number(p.quantidade ?? 0);
       const stockHtml = qtd <= 0
         ? `<span class="badge badge-off">Esgotado</span>`
@@ -834,11 +739,11 @@
         <td>${Number(p.preco).toLocaleString('pt-AO')}</td>
         <td>${stockHtml}</td>
         <td><span class="badge ${p.disponivel !== false ? 'badge-on' : 'badge-off'}">${p.disponivel !== false ? 'Activo' : 'Inactivo'}</span></td>
-        <td>${p.destaque ? icon('star', 'icon-sm') : '—'}</td>
+        <td>${p.destaque ? '⭐' : '—'}</td>
         <td>
           <div class="actions">
-            <button class="btn-icon edit" onclick="abrirForm('${p.id}')">${icon('edit', 'icon-sm')} Editar</button>
-            <button class="btn-icon del"  onclick="eliminarProduto('${p.id}')" aria-label="Eliminar">${icon('trash', 'icon-sm')}</button>
+            <button class="btn-icon edit" onclick="abrirForm('${p.id}')">✏️ Editar</button>
+            <button class="btn-icon del"  onclick="eliminarProduto('${p.id}')">🗑️</button>
           </div>
         </td>
       </tr>`;
@@ -853,7 +758,7 @@
     document.getElementById('uploadProgress').style.display = 'none';
     document.getElementById('progressFill').style.width = '0%';
     document.getElementById('uploadArea').innerHTML =
-      `<div class="upload-preview-empty">${icon('image', 'icon-lg upload-icon')}<p>Clica para escolher uma foto</p><small>JPG, PNG ou WEBP · máx. 5MB</small></div>`;
+      `<div class="upload-preview-empty"><span>📷</span><p>Clica para escolher uma foto</p><small>JPG, PNG ou WEBP · máx. 5MB</small></div>`;
 
     if (id) {
       const p = produtos.find(x => x.id === id);
@@ -890,8 +795,8 @@
   window.guardarProduto = async function() {
     const nome  = document.getElementById('fNome').value.trim();
     const preco = parseFloat(document.getElementById('fPreco').value);
-    if (!nome)            { toast('O nome é obrigatório'); return; }
-    if (!preco || preco <= 0) { toast('Preço inválido'); return; }
+    if (!nome)            { toast('⚠️ O nome é obrigatório'); return; }
+    if (!preco || preco <= 0) { toast('⚠️ Preço inválido'); return; }
 
     const fileInput = document.getElementById('fImagemFile');
     let imagemUrl   = document.getElementById('fImagem').value.trim();
@@ -903,8 +808,8 @@
         imagemUrl = await uploadImagem(fileInput.files[0]);
       } catch(e) {
         toast(e.message === 'Cloudinary não configurado'
-          ? 'Configura o Cloudinary primeiro'
-          : 'Erro no upload da imagem');
+          ? '⚠️ Configura o Cloudinary primeiro'
+          : '⚠️ Erro no upload da imagem');
         document.getElementById('btnSave').textContent = 'Guardar produto';
         document.getElementById('btnSave').disabled    = false;
         return;
@@ -929,16 +834,16 @@
         await updateDoc(doc(db, "produtos", editandoId), dados);
         const idx = produtos.findIndex(p => p.id === editandoId);
         produtos[idx] = { ...produtos[idx], ...dados };
-        toast('Produto actualizado');
+        toast('✓ Produto actualizado');
       } else {
         dados.criado_em = serverTimestamp();
         const ref = await addDoc(collection(db, "produtos"), dados);
         produtos.push({ id: ref.id, ...dados });
-        toast('Produto criado com sucesso!');
+        toast('✓ Produto criado com sucesso!');
       }
     } catch(e) {
       console.error(e);
-      toast('Erro ao guardar. Verifica a ligação.');
+      toast('⚠️ Erro ao guardar. Verifica a ligação.');
       document.getElementById('btnSave').textContent = 'Guardar produto';
       document.getElementById('btnSave').disabled    = false;
       return;
@@ -959,14 +864,14 @@
     actualizarStats();
     renderTabela();
     verificarStockBaixo();
-    toast('Produto eliminado');
+    toast('🗑️ Produto eliminado');
   };
 
   // ── 11. UPLOAD CLOUDINARY ─────────────────────────────
   window.previewImagem = function(input) {
     const file = input.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast('Imagem demasiado grande (máx. 5MB)'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast('⚠️ Imagem demasiado grande (máx. 5MB)'); return; }
     const reader = new FileReader();
     reader.onload = e => {
       document.getElementById('uploadArea').innerHTML =
@@ -997,7 +902,7 @@
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           const data = JSON.parse(xhr.responseText);
-          document.getElementById('progressLabel').textContent = 'Upload concluído';
+          document.getElementById('progressLabel').textContent = '✓ Upload concluído';
           document.getElementById('fImagem').value = data.secure_url;
           resolve(data.secure_url);
         } else {
@@ -1049,7 +954,7 @@
         <td>${data}</td>
         <td>
           <div class="actions">
-            <button class="btn-icon edit" onclick="verEncomenda('${e.id}')">${icon('eye', 'icon-sm')} Ver</button>
+            <button class="btn-icon edit" onclick="verEncomenda('${e.id}')">👁️ Ver</button>
             <select onchange="alterarEstado('${e.id}', this.value)"
               style="padding:0.2rem 0.4rem;border-radius:4px;border:1px solid var(--border);font-size:0.72rem;">
               <option value="pendente"   ${estado==='pendente'   ?'selected':''}>Pendente</option>
@@ -1066,67 +971,16 @@
 
   window.filtrarEncomendas = function() { carregarEncomendas(); };
 
-  function normalizarTelefoneWhatsApp(telefone) {
-    let n = String(telefone || '').replace(/\D/g, '');
-    if (!n) return '';
-    if (n.startsWith('00')) n = n.slice(2);
-    if (n.startsWith('0')) n = n.slice(1);
-    if (n.length === 9) n = `244${n}`;
-    return n;
-  }
-
-  function mensagemWhatsAppEstado(encomenda, novoEstado) {
-    const nome = encomenda.cliente?.nome || 'cliente';
-    const total = Number(encomenda.total || 0).toLocaleString('pt-AO');
-    const codigo = encomenda.id.slice(0, 6).toUpperCase();
-
-    const mensagens = {
-      confirmado:
-        `Olá ${nome}! A tua encomenda #${codigo} foi confirmada.\n\nTotal: ${total} Kz\nEstamos a preparar tudo com cuidado. Obrigado pela preferência.`,
-      enviado:
-        `Olá ${nome}! A tua encomenda #${codigo} já foi enviada.\n\nTotal: ${total} Kz\nEm breve estará contigo.`,
-      entregue:
-        `Olá ${nome}! Confirmamos que a tua encomenda #${codigo} foi entregue.\n\nObrigado por escolheres a Grande Seba.`
-    };
-
-    return mensagens[novoEstado] || '';
-  }
-
-  function abrirWhatsAppEstado(encomenda, novoEstado, janela) {
-    const estadosNotificaveis = ['confirmado', 'enviado', 'entregue'];
-    if (!estadosNotificaveis.includes(novoEstado)) return;
-
-    const telefone = normalizarTelefoneWhatsApp(encomenda.cliente?.telefone);
-    if (!telefone) {
-      if (janela) janela.close();
-      toast('Estado alterado, mas o cliente não tem telefone válido');
-      return;
-    }
-
-    const msg = mensagemWhatsAppEstado(encomenda, novoEstado);
-    const url = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
-    if (janela) janela.location.href = url;
-    else window.open(url, '_blank');
-  }
-
   window.alterarEstado = async function(id, novoEstado) {
-    const encomenda = encomendas.find(x => x.id === id);
-    const deveNotificar = ['confirmado', 'enviado', 'entregue'].includes(novoEstado);
-    const telefoneValido = encomenda ? normalizarTelefoneWhatsApp(encomenda.cliente?.telefone) : '';
-    const janelaWhatsApp = deveNotificar && telefoneValido ? window.open('', '_blank') : null;
-
     try {
       await updateDoc(doc(db, "encomendas", id), {
         estado: novoEstado,
         actualizado_em: serverTimestamp()
       });
-      toast(`Estado alterado para ${novoEstado}`);
-      if (encomenda) abrirWhatsAppEstado(encomenda, novoEstado, janelaWhatsApp);
-      else if (janelaWhatsApp) janelaWhatsApp.close();
+      toast(`✅ Estado alterado para ${novoEstado}`);
       await carregarEncomendas();
     } catch(e) {
-      if (janelaWhatsApp) janelaWhatsApp.close();
-      toast('Erro ao alterar estado');
+      toast('⚠️ Erro ao alterar estado');
       console.error(e);
     }
   };
@@ -1136,7 +990,7 @@
     if (!e) return;
     const itens = e.itens?.map(i => `  • ${i.qty}x ${i.nome} — ${Number(i.preco * i.qty).toLocaleString('pt-AO')} Kz`).join('\n') || '  —';
     alert(
-      `ENCOMENDA #${id.slice(0, 6).toUpperCase()}\n\n` +
+      `📋 ENCOMENDA #${id.slice(0, 6).toUpperCase()}\n\n` +
       `Cliente:    ${e.cliente?.nome     || '—'}\n` +
       `Telefone:   ${e.cliente?.telefone || '—'}\n` +
       `Morada:     ${e.cliente?.morada   || '—'}\n` +
@@ -1149,6 +1003,132 @@
   };
 
   // ── 13. TOAST ─────────────────────────────────────────
+  // ── 13. CLIENTES — CARREGAR ────────────────────────────
+  async function carregarClientes() {
+    const tbody = document.getElementById('tabelaClientes');
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">A carregar clientes...</td></tr>`;
+
+    try {
+      const [clientesSnap, encomendasSnap] = await Promise.all([
+        getDocs(collection(db, "clientes")),
+        getDocs(collection(db, "encomendas")),
+      ]);
+
+      const pedidos = encomendasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      clientes = clientesSnap.docs.map(d => {
+        const c = { id: d.id, ...d.data() };
+        const pedidosCliente = pedidos.filter(p => {
+          const emailIgual = c.email && p.clienteEmail && String(p.clienteEmail).toLowerCase() === String(c.email).toLowerCase();
+          const telefoneIgual = c.telefone && p.cliente?.telefone && normalizarTelefone(p.cliente.telefone) === normalizarTelefone(c.telefone);
+          return p.clienteUid === c.id || emailIgual || telefoneIgual;
+        });
+        const pedidosValidos = pedidosCliente.filter(p => (p.estado || 'pendente') !== 'cancelado');
+        const totalGasto = pedidosValidos.reduce((s, p) => s + (Number(p.total) || 0), 0);
+
+        return {
+          ...c,
+          encomendasCount: pedidosCliente.length,
+          totalGasto,
+          ultimaEncomenda: pedidosCliente
+            .map(p => p.criado_em?.toDate?.())
+            .filter(Boolean)
+            .sort((a, b) => b - a)[0] || null,
+        };
+      }).sort((a, b) => (b.criado_em?.toMillis?.() || 0) - (a.criado_em?.toMillis?.() || 0));
+    } catch(e) {
+      console.warn("Erro ao carregar clientes:", e.message);
+      clientes = [];
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Não foi possível carregar clientes. Verifica as regras do Firestore.</td></tr>`;
+      actualizarStatsClientes();
+      return;
+    }
+
+    actualizarStatsClientes();
+    renderClientes();
+  }
+
+  function normalizarTelefone(valor) {
+    return String(valor || '').replace(/\D/g, '');
+  }
+
+  function dataFirestore(valor) {
+    return valor?.toDate?.() ? valor.toDate() : null;
+  }
+
+  function formatarData(valor) {
+    const data = dataFirestore(valor) || (valor instanceof Date ? valor : null);
+    return data ? data.toLocaleDateString('pt-AO') : '—';
+  }
+
+  function textoCliente(c) {
+    return [c.nome, c.email, c.telefone].join(' ').toLowerCase();
+  }
+
+  function actualizarStatsClientes() {
+    const agora = new Date();
+    const ha30dias = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const novos = clientes.filter(c => {
+      const data = dataFirestore(c.criado_em);
+      return data && data >= ha30dias;
+    }).length;
+    const top = [...clientes].sort((a, b) => (b.totalGasto || 0) - (a.totalGasto || 0))[0];
+
+    document.getElementById('statTotalClientes').textContent = clientes.length;
+    document.getElementById('statNovosClientes').textContent = novos;
+    document.getElementById('statClienteTop').textContent = top && top.totalGasto > 0 ? top.nome || top.email || 'Cliente' : '—';
+  }
+
+  function renderClientes() {
+    const tbody = document.getElementById('tabelaClientes');
+    let lista = clientes;
+    if (filtroClientes) lista = lista.filter(c => textoCliente(c).includes(filtroClientes));
+    document.getElementById('clientesTotal').textContent = `${lista.length} cliente${lista.length === 1 ? '' : 's'}`;
+
+    if (!lista.length) {
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Nenhum cliente encontrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = lista.map(c => {
+      const favoritos = Array.isArray(c.favoritos) ? c.favoritos.length : 0;
+      return `
+      <tr>
+        <td><strong>${c.nome || '—'}</strong></td>
+        <td>${c.email || '—'}</td>
+        <td>${c.telefone || '—'}</td>
+        <td>${formatarData(c.criado_em)}</td>
+        <td>${favoritos}</td>
+        <td>${c.encomendasCount || 0}</td>
+        <td>${Number(c.totalGasto || 0).toLocaleString('pt-AO')}</td>
+        <td>
+          <button class="btn-icon edit" onclick="verCliente('${c.id}')">👁️ Ver</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.filtrarClientes = function(valor) {
+    filtroClientes = String(valor || '').trim().toLowerCase();
+    renderClientes();
+  };
+
+  window.verCliente = function(id) {
+    const c = clientes.find(x => x.id === id);
+    if (!c) return;
+    const favoritos = Array.isArray(c.favoritos) ? c.favoritos.length : 0;
+    alert(
+      `👤 CLIENTE\n\n` +
+      `Nome:       ${c.nome || '—'}\n` +
+      `Email:      ${c.email || '—'}\n` +
+      `Telefone:   ${c.telefone || '—'}\n` +
+      `Registo:    ${formatarData(c.criado_em)}\n` +
+      `Favoritos:  ${favoritos}\n` +
+      `Encomendas: ${c.encomendasCount || 0}\n` +
+      `Total:      ${Number(c.totalGasto || 0).toLocaleString('pt-AO')} Kz\n` +
+      `Última:     ${c.ultimaEncomenda ? c.ultimaEncomenda.toLocaleDateString('pt-AO') : '—'}`
+    );
+  };
+
   let toastTimer;
   window.toast = function(msg) {
     const el = document.getElementById('toast');
@@ -1158,6 +1138,126 @@
     toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
   };
   function toast(msg) { window.toast(msg); }
+
+  // ── 14. DASHBOARD ──────────────────────────────────────
+  let chartEncomendas = null;
+  let chartCategorias = null;
+
+  async function carregarDashboard() {
+    let pedidos = [];
+    try {
+      const snap = await getDocs(query(collection(db, "encomendas"), orderBy("criado_em", "desc")));
+      pedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+      console.warn("Erro ao carregar dashboard:", e.message);
+      pedidos = [];
+    }
+
+    const pedidosValidos = pedidos.filter(p => p.estado !== 'cancelado');
+    const agora = new Date();
+    const ha30dias = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    // Total de encomendas
+    document.getElementById('dashTotalPedidos').textContent = pedidos.length;
+
+    // Vendas (últimos 30 dias)
+    const vendas30 = pedidosValidos
+      .filter(p => { const d = p.criado_em?.toDate?.(); return d && d >= ha30dias; })
+      .reduce((s, p) => s + (Number(p.total) || 0), 0);
+    document.getElementById('dashTotalVendas').textContent = vendas30.toLocaleString('pt-AO') + ' Kz';
+
+    // Produto mais vendido (por quantidade)
+    const contagemProdutos = {};
+    pedidosValidos.forEach(p => (p.itens || []).forEach(it => {
+      contagemProdutos[it.nome] = (contagemProdutos[it.nome] || 0) + (Number(it.qty) || 0);
+    }));
+    const topProduto = Object.entries(contagemProdutos).sort((a, b) => b[1] - a[1])[0];
+    document.getElementById('dashProdutoTop').textContent = topProduto ? `${topProduto[0]} (${topProduto[1]}x)` : '—';
+
+    // Pendentes
+    document.getElementById('dashPendentes').textContent = pedidos.filter(p => (p.estado || 'pendente') === 'pendente').length;
+
+    // Valor total do stock (preço × quantidade de todos os produtos)
+    const valorStock = produtos.reduce((s, p) => s + (Number(p.preco) || 0) * (Number(p.quantidade) || 0), 0);
+    document.getElementById('dashValorStock').textContent = valorStock.toLocaleString('pt-AO') + ' Kz';
+
+    // Gráfico: encomendas por dia (últimos 7 dias)
+    const labelsDias = [];
+    const contagemDias = [];
+    for (let i = 6; i >= 0; i--) {
+      const dia = new Date(agora.getTime() - i * 24 * 60 * 60 * 1000);
+      const inicio = new Date(dia.getFullYear(), dia.getMonth(), dia.getDate());
+      const fim = new Date(inicio.getTime() + 24 * 60 * 60 * 1000);
+      labelsDias.push(inicio.toLocaleDateString('pt-AO', { day: '2-digit', month: '2-digit' }));
+      contagemDias.push(pedidos.filter(p => {
+        const d = p.criado_em?.toDate?.();
+        return d && d >= inicio && d < fim;
+      }).length);
+    }
+    renderGraficoEncomendas(labelsDias, contagemDias);
+
+    // Gráfico: vendas por categoria de produto (tipo)
+    const vendasPorTipo = {};
+    pedidosValidos.forEach(p => (p.itens || []).forEach(it => {
+      const tipo = it.tipo || 'outro';
+      vendasPorTipo[tipo] = (vendasPorTipo[tipo] || 0) + (Number(it.preco) || 0) * (Number(it.qty) || 0);
+    }));
+    const tiposOrdenados = Object.entries(vendasPorTipo).sort((a, b) => b[1] - a[1]);
+    renderGraficoCategorias(tiposOrdenados);
+  }
+
+  function renderGraficoEncomendas(labels, dados) {
+    const canvas = document.getElementById('graficoEncomendas');
+    if (!canvas || typeof Chart === 'undefined') return;
+    if (chartEncomendas) chartEncomendas.destroy();
+    chartEncomendas = new Chart(canvas, {
+      type: 'line',
+      data: { labels, datasets: [{
+        label: 'Encomendas', data: dados,
+        borderColor: '#2C2C2C', backgroundColor: 'rgba(44,44,44,0.08)',
+        fill: true, tension: 0.3, pointRadius: 3,
+      }] },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } },
+      },
+    });
+  }
+
+  function renderGraficoCategorias(tiposOrdenados) {
+    const canvas    = document.getElementById('graficoCategorias');
+    const vazioMsg  = document.getElementById('graficoCategoriasVazio');
+    if (!canvas || typeof Chart === 'undefined') return;
+    if (chartCategorias) { chartCategorias.destroy(); chartCategorias = null; }
+
+    if (!tiposOrdenados.length) {
+      canvas.style.display = 'none';
+      vazioMsg.style.display = 'block';
+      return;
+    }
+    canvas.style.display = 'block';
+    vazioMsg.style.display = 'none';
+
+    const labels  = tiposOrdenados.map(([t]) => tipoLabel(t));
+    const valores = tiposOrdenados.map(([, v]) => v);
+    const cores   = ['#2C2C2C', '#C87FA0', '#5A8FB8', '#22c55e', '#f59e0b', '#9A9A9A', '#a855f7', '#06b6d4', '#ef4444', '#84cc16', '#f97316', '#14b8a6', '#6366f1', '#eab308'];
+
+    chartCategorias = new Chart(canvas, {
+      type: 'bar',
+      data: { labels, datasets: [{
+        label: 'Vendas (Kz)', data: valores,
+        backgroundColor: labels.map((_, i) => cores[i % cores.length]),
+        borderRadius: 4,
+      }] },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true, ticks: { callback: v => Number(v).toLocaleString('pt-AO') } } },
+      },
+    });
+  }
 
 </script>
 </body>

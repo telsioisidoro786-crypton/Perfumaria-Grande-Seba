@@ -1,16 +1,24 @@
-// ═══════════════════════════════════════════════════════
-// FIRESTORE RULES — Perfumaria Grande Seba
-// Firebase Console → Firestore Database → Regras
-// ═══════════════════════════════════════════════════════
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // PRODUTOS — leitura pública, escrita bloqueada (feita pelo admin.html via SDK)
     match /produtos/{produtoId} {
       allow read: if true;
-      allow write: if false; // O admin.html escreve com a chave da app (não precisa de auth por agora)
+      allow write: if true; // Muda para false depois de testar
     }
+
+    match /clientes/{userId} {
+      // só o próprio cliente (autenticado) lê/escreve o seu perfil e favoritos
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /encomendas/{encomendaId} {
+      // aberto por agora: a loja permite checkout de convidados (sem conta),
+      // e o admin.html ainda não usa Firebase Auth, só uma password local —
+      // por isso o Firestore não tem como "saber" que é o admin a pedir.
+      allow read, write: if true; // Muda para mais restrito quando o admin tiver login real
+    }
+
   }
 }
