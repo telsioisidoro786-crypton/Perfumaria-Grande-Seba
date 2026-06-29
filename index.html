@@ -990,57 +990,6 @@
 <!-- FIREBASE -->
 <script type="module">
 
-// ── WEB PUSH NOTIFICATIONS ──────────────────
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-
-const messaging = getMessaging(app);
-
-// Pedir permissão e obter token
-async function requestNotificationPermission() {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      const token = await getToken(messaging, {
-        vapidKey: 'cVRC14tK8mV8SZhPEhnlvaeLnKdwO9V9FpA-gxtz8BA' // Copia do Firebase Console
-      });
-      console.log('FCM Token:', token);
-      // Guardar token no Firestore associado ao utilizador
-      await saveTokenToFirestore(token);
-      return token;
-    }
-  } catch (error) {
-    console.error('Erro ao obter token:', error);
-  }
-}
-
-// Guardar token no Firestore
-async function saveTokenToFirestore(token) {
-  try {
-    const userRef = doc(db, "users", "anonymous_user"); // ou usar ID do utilizador
-    await setDoc(userRef, { fcmToken: token }, { merge: true });
-    // OU inscrever num tópico "todos"
-    await subscribeToTopic(token);
-  } catch(e) {
-    console.error('Erro ao guardar token:', e);
-  }
-}
-
-// Inscrever token num tópico (para enviar a todos)
-async function subscribeToTopic(token) {
-  // Isto é feito no backend (Cloud Function ou servidor Node.js)
-  // Porque requer o Admin SDK
-}
-
-// Ouvir notificações em foreground
-onMessage(messaging, (payload) => {
-  console.log('Notificação recebida em foreground:', payload);
-  // Mostrar toast ou notificação customizada
-  mostrarToast(`📢 ${payload.notification.title}: ${payload.notification.body}`);
-});
-
-// Chamar a função quando o utilizador visitar a loja
-requestNotificationPermission();
-
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import {
     getFirestore, collection, getDocs, addDoc, query, orderBy, where,
@@ -1071,6 +1020,38 @@ requestNotificationPermission();
 
   // NÚMERO WHATSAPP DA LOJA — substitui pelo número real do cliente
   window.WA_NUMBER = "244933609090";
+
+  // ── WEB PUSH NOTIFICATIONS (em preparação) ──
+  // Nota: isto só funciona com 1) um service worker "firebase-messaging-sw.js" na
+  // raiz do site, e 2) a tua VAPID key real (Firebase Console → Project Settings →
+  // Cloud Messaging). Por isso NÃO chamamos isto automaticamente ao carregar a
+  // página — pedir permissão de notificações sem o utilizador pedir nada é uma
+  // má experiência e a maioria dos browsers ignora/bloqueia o pedido de qualquer forma.
+  // Quando estiver pronto, chama window.activarNotificacoes() a partir de um botão.
+  import("https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js").then(async ({ getMessaging, getToken, onMessage }) => {
+    try {
+      const messaging = getMessaging(app);
+      onMessage(messaging, (payload) => {
+        mostrarToast(`📢 ${payload.notification?.title || ''}: ${payload.notification?.body || ''}`);
+      });
+      window.activarNotificacoes = async function() {
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission !== 'granted') return;
+          const token = await getToken(messaging, {
+            vapidKey: 'cVRC14tK8mV8SZhPEhnlvaeLnKdwO9V9FpA-gxtz8BA', // troca pela tua VAPID key real
+          });
+          const refUid = clienteUser ? clienteUser.uid : ('anon_' + Math.random().toString(36).slice(2));
+          await setDoc(doc(db, "tokens_notificacao", refUid), { fcmToken: token, criado_em: serverTimestamp() }, { merge: true });
+          mostrarToast('🔔 Notificações activadas!');
+        } catch(e) {
+          console.warn("Erro ao activar notificações:", e.message);
+        }
+      };
+    } catch(e) {
+      console.warn("Push notifications indisponíveis:", e.message);
+    }
+  }).catch(e => console.warn("Erro ao carregar firebase-messaging:", e.message));
 
   // ─── TIPOS DE PRODUTO ──────────────────────
   // Lista única de tipos/categorias de produto, organizada por grupo.
